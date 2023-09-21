@@ -1,41 +1,43 @@
 ﻿using UnityEngine;
-
-public class Singleton<T> : MonoBehaviour where T : Singleton<T>
+namespace anogame
 {
-    protected static T _instance;
-
-    public static T Instance
+    public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
-        get
+        protected static T _instance;
+
+        public static T Instance
         {
-            if (_instance == null)
+            get
             {
-                _instance = FindObjectOfType<T>();
                 if (_instance == null)
                 {
-                    GameObject obj = new GameObject();
-                    _instance = obj.AddComponent<T>();
-                    _instance.Initialize();
+                    _instance = FindObjectOfType<T>();
+                    if (_instance == null)
+                    {
+                        GameObject obj = new GameObject();
+                        _instance = obj.AddComponent<T>();
+                        _instance.Initialize();
+                    }
                 }
+
+                return _instance;
+            }
+        }
+
+        protected virtual void Awake()
+        {
+            if (!Application.isPlaying)
+            {
+                return;
             }
 
-            return _instance;
+            if (_instance != this)
+            {
+                _instance = this as T;
+                _instance.Initialize();
+            }
         }
+
+        public virtual void Initialize() { }
     }
-
-    protected virtual void Awake()
-    {
-        if (!Application.isPlaying)
-        {
-            return;
-        }
-
-        if (_instance != this)
-        {
-            _instance = this as T;
-            _instance.Initialize();
-        }
-    }
-
-    public virtual void Initialize() { }
 }

@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIPanel : MonoBehaviour
+namespace anogame
 {
-    public void Initialize()
+    public class UIPanel : MonoBehaviour
     {
-        initialize();
+        public void Initialize()
+        {
+            initialize();
+        }
+
+        protected virtual void initialize() { }
+
+        public void Shutdown()
+        {
+            shutdown();
+        }
+
+        protected virtual void shutdown() { }
     }
-
-    protected virtual void initialize() { }
-
-    public void Shutdown()
-    {
-        shutdown();
-    }
-
-    protected virtual void shutdown() { }
 }
