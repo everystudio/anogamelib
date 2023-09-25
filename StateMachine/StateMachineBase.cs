@@ -12,11 +12,11 @@ namespace anogame
         public UnityEvent OnBegin = new UnityEvent();
         public UnityEvent OnEnd = new UnityEvent();
 
-        protected virtual void OnUpdatePrev() { }
-        protected virtual void OnUpdateAfter() { }
+        public virtual void OnUpdatePrev() { }
+        public virtual void OnUpdateAfter() { }
 
-        protected virtual void OnFixedUpdatePrev() { }
-        protected virtual void OnFixedUpdateAfter() { }
+        public virtual void OnFixedUpdatePrev() { }
+        public virtual void OnFixedUpdateAfter() { }
 
         public void ChangeState(StateBase<T> state)
         {
