@@ -57,6 +57,9 @@ namespace anogame
             ret.offsetMin = Vector2.zero;
             ret.offsetMax = Vector2.zero;
             ret.localScale = Vector3.one;
+
+            ret.transform.localPosition = Vector3.zero;
+
             return ret;
         }
 
