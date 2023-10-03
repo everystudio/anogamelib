@@ -87,16 +87,8 @@ namespace anogame
             initialized = true;
         }
 
-        public GameObject AddPanel(string strName, Transform root)
+        public GameObject AddPanel(GameObject prefab, Transform root)
         {
-            GameObject prefab = Resources.Load(strName) as GameObject;
-            if (prefab == null)
-            {
-                Debug.LogError("Not found prefab:" + strName);
-                return null;
-            }
-            prefab.SetActive(true);
-
             GameObject addPanel = Instantiate(prefab, root);
 
             if (addPanel.GetComponent<CanvasGroup>() == null)
@@ -119,9 +111,23 @@ namespace anogame
             UIPanel uiPanel = addPanel.GetComponent<UIPanel>();
             uiPanel?.Initialize();
 
-            Debug.Log(strName);
-            _panelDictionary.Add(strName, addPanel);
+            Debug.Log(prefab.name);
+            _panelDictionary.Add(prefab.name, addPanel);
             return addPanel;
+        }
+
+        public GameObject AddPanel(string strName, Transform root)
+        {
+            GameObject prefab = Resources.Load(strName) as GameObject;
+            if (prefab == null)
+            {
+                Debug.LogError("Not found prefab:" + strName);
+                return null;
+            }
+            prefab.SetActive(true);
+
+            return AddPanel(prefab, root);
+
         }
 
 
