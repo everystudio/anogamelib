@@ -16,8 +16,8 @@ namespace anogame
                     {
                         GameObject obj = new GameObject();
                         _instance = obj.AddComponent<T>();
-                        _instance.Initialize();
                     }
+                    _instance.Initialize();
                 }
 
                 return _instance;
