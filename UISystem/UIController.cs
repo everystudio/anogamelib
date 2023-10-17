@@ -111,7 +111,10 @@ namespace anogame
             UIPanel uiPanel = addPanel.GetComponent<UIPanel>();
             uiPanel?.Initialize();
 
-            Debug.Log(prefab.name);
+            if (showDebug)
+            {
+                Debug.Log(prefab.name);
+            }
             _panelDictionary.Add(prefab.name, addPanel);
             return addPanel;
         }

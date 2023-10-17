@@ -14,11 +14,11 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
         {
             if (_instance == null)
             {
-                Debug.Log(Type.GetType(typeof(T).ToString()) + "のインスタンスを生成します");
+                //Debug.Log(Type.GetType(typeof(T).ToString()) + "のインスタンスを検索します");
                 _instance = FindObjectOfType<T>();
                 if (_instance == null)
                 {
-                    Debug.LogError("インスタンスが存在しません");
+                    //Debug.LogError("インスタンスが存在しません");
                     GameObject obj = new GameObject();
                     _instance = obj.AddComponent<T>();
                 }
