@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
-
+using anogame;
 
 namespace anogame
 {
@@ -11,8 +11,7 @@ namespace anogame
         [SerializeField]
         protected EventGameObject eventObject;
 
-        [SerializeField]
-        protected UnityEventGameObject eventAction;
+        [SerializeField] protected UnityEventGameObject eventAction;
 
         protected override ScriptableEvent<GameObject> ScriptableEvent
         {

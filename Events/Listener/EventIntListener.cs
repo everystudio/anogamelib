@@ -11,8 +11,7 @@ namespace anogame
         [SerializeField]
         protected EventInt eventObject;
 
-        [SerializeField]
-        protected UnityEventInt eventAction;
+        [SerializeField] protected UnityEventInt eventAction;
 
         protected override ScriptableEvent<int> ScriptableEvent
         {

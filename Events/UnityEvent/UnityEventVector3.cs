@@ -2,5 +2,9 @@
 using System.Collections;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class UnityEventVector3 : UnityEvent<Vector2> { }
+namespace anogame
+{
+
+    [System.Serializable]
+    public class UnityEventVector3 : UnityEvent<Vector2> { }
+}

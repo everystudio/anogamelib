@@ -2,5 +2,8 @@
 using System.Collections;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class UnityEventFloat : UnityEvent<float> { }
+namespace anogame
+{
+    [System.Serializable]
+    public class UnityEventFloat : UnityEvent<float> { }
+}
