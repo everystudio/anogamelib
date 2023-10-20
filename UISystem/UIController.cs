@@ -133,6 +133,10 @@ namespace anogame
 
         }
 
+        public GameObject AddPanel(GameObject prefab, LAYER layer)
+        {
+            return AddPanel(prefab, layerRectTransforms[(int)layer]);
+        }
 
         public GameObject AddPanel(string strName, LAYER layer)
         {
