@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace anogame.dg01
+namespace anogame
 {
     public interface IFreezeMovement
     {
