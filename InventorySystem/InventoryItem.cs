@@ -12,6 +12,7 @@ namespace anogame.inventory
         [SerializeField] private string displayName = null;
         [SerializeField][TextArea] private string description = null;
         [SerializeField] private Sprite icon = null;
+        [SerializeField] private PickableItem pickable = null;
         [SerializeField] private bool stackable = false;
 
         static Dictionary<string, InventoryItem> itemLookupCache;
@@ -62,6 +63,13 @@ namespace anogame.inventory
         public string GetDescription()
         {
             return description;
+        }
+
+        public PickableItem SpawnPickableItem(Vector3 position)
+        {
+            var pickableItem = Instantiate(pickable, position, Quaternion.identity);
+            pickableItem.SetItem(this);
+            return pickableItem;
         }
 
         public void OnAfterDeserialize()
