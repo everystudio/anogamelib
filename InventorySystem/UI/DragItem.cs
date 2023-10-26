@@ -87,20 +87,20 @@ namespace anogame.inventory
             var amount = myContainer.GetAmount();
             if (item == null || amount <= 0)
             {
-                Debug.Log("aaa");
+                //Debug.Log("aaa");
                 return;
             }
 
             var maxAcceptable = target.MaxAcceptable(item);
-            var transfer = Mathf.Min(amount, maxAcceptable);
-            if (transfer <= 0)
+            var transferAmount = Mathf.Min(amount, maxAcceptable);
+            if (transferAmount <= 0)
             {
-                Debug.Log("bbb");
+                //Debug.Log("bbb");
                 return;
             }
 
-            myContainer.Remove(transfer);
-            target.Set(item, transfer);
+            myContainer.Remove(transferAmount);
+            target.Add(item, transferAmount);
         }
 
         private void SwapItemSource(IDragContainer<T> source, IDragContainer<T> target)
@@ -110,22 +110,48 @@ namespace anogame.inventory
             var targetItem = target.GetItem();
             var targetAmount = target.GetAmount();
 
-            if (sourceItem == null || sourceAmount <= 0)
-            {
-                return;
-            }
-
-            if (targetItem == null || targetAmount <= 0)
-            {
-                return;
-            }
-
-            // 今のところはAcceptableでの量溢れは計算に入れない
+            // 一旦中身を空にする
             source.Clear();
             target.Clear();
 
-            source.Set(targetItem, targetAmount);
-            target.Set(sourceItem, sourceAmount);
+            int sourceTakebackAmount = CalculateTakeBack(sourceItem, sourceAmount, source, target);
+            int targetTakebackAmount = CalculateTakeBack(targetItem, targetAmount, target, source);
+
+            // takebackが発生する場合は元に戻す変数を用意する
+            int calcedSourceAmount = 0;
+            if (0 < sourceTakebackAmount)
+            {
+                source.Add(sourceItem, sourceTakebackAmount);
+                calcedSourceAmount = sourceAmount - sourceTakebackAmount;
+            }
+            int calcedTargetAmount = 0;
+            if (0 < targetTakebackAmount)
+            {
+                target.Add(targetItem, targetTakebackAmount);
+                calcedTargetAmount = targetAmount - targetTakebackAmount;
+            }
+
+            // ダメだった場合
+            if (source.MaxAcceptable(targetItem) < calcedTargetAmount ||
+                target.MaxAcceptable(sourceItem) < calcedSourceAmount)
+            {
+                // どちらかのアイテムが受け入れられない場合は元に戻す
+                source.Add(sourceItem, sourceAmount);
+                target.Add(targetItem, targetAmount);
+                return;
+            }
+
+            if (0 < calcedTargetAmount)
+            {
+                source.Add(targetItem, calcedTargetAmount);
+            }
+            if (0 < calcedSourceAmount)
+            {
+                target.Add(sourceItem, calcedSourceAmount);
+            }
+            // これで良い気がするが、とりあえず残しておく
+            //source.Add(targetItem, targetAmount);
+            //target.Add(sourceItem, sourceAmount);
         }
 
         private int CalculateTakeBack(
@@ -134,11 +160,19 @@ namespace anogame.inventory
         {
 
             int takeBackNumber = 0;
-
             var targetMaxAcceptable = targetContainer.MaxAcceptable(moveItem);
+
             if (targetMaxAcceptable < moveAmount)
             {
                 takeBackNumber = moveAmount - targetMaxAcceptable;
+
+                // ここ良くない。テークバックの数字だけを計算すれるはずなのに、受け入れ先のことまで木にしている
+                var sourceMaxAcceptable = sourceContainer.MaxAcceptable(moveItem);
+                if (sourceMaxAcceptable < takeBackNumber)
+                {
+                    // takebackの数を受け入れられるかどうかは別のチェックメソッドを用意するべき
+                    return 0;
+                }
             }
             return takeBackNumber;
 

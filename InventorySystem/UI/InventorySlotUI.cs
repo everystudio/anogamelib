@@ -26,9 +26,9 @@ namespace anogame.inventory
             icon.SetItem(slot.inventoryItem, slot.amount);
         }
 
-        public void Add(int amount)
+        public void Add(InventoryItem item, int amount)
         {
-            Debug.LogError("未実装 InventorySlotUI.Add()");
+            inventory.AddItemToSlot(index, item, amount);
         }
 
 
@@ -62,10 +62,11 @@ namespace anogame.inventory
             // 個数は一旦考えない
             inventory.RemoveFromSlot(index, amount);
         }
-
+        /*
         public void Set(InventoryItem item, int amount)
         {
             inventory.AddItemToSlot(index, item, amount);
         }
+        */
     }
 }

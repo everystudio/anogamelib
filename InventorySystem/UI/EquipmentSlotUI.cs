@@ -34,7 +34,7 @@ namespace anogame.inventory
             return 1;
         }
 
-        public void AddItems(InventoryItem item, int number)
+        public void Add(InventoryItem item, int number)
         {
             playerEquipment.AddItem(equipLocation, (EquipableItem)item);
         }
@@ -53,16 +53,12 @@ namespace anogame.inventory
         {
             icon.SetItem(playerEquipment.GetItemInSlot(equipLocation), 1);
         }
-
-        public void Add(int amount)
-        {
-            Debug.LogError("未実装 InventorySlotUI.Add()");
-        }
-
+        /*
         public void Set(InventoryItem item, int amount)
         {
             playerEquipment.AddItem(equipLocation, (EquipableItem)item);
         }
+        */
 
         public int GetAmount()
         {
