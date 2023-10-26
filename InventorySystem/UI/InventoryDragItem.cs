@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    public class InventoryDragItem : DragItem<Sprite>
+    public class InventoryDragItem : DragItem<InventoryItem>
     {
 
     }

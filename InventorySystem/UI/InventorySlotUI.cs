@@ -5,9 +5,21 @@ using UnityEngine;
 namespace anogame.inventory
 {
 
-    public class InventorySlotUI : MonoBehaviour, IDragContainer<Sprite>
+    public class InventorySlotUI : MonoBehaviour, IDragContainer<InventoryItem>
     {
         [SerializeField] InventoryItemIcon icon = null;
+
+        // STATE
+        int index;
+        InventoryItem item;
+        Inventory inventory;
+
+        public void Setup(Inventory inventory, int index)
+        {
+            this.inventory = inventory;
+            this.index = index;
+            icon.SetItem(inventory.GetItemInSlot(index));
+        }
 
         public void Add(int amount)
         {
@@ -15,7 +27,7 @@ namespace anogame.inventory
 
         public void Clear()
         {
-            icon.SetItem(null);
+            inventory.RemoveFromSlot(index);
         }
 
         public int GetAmount()
@@ -23,12 +35,12 @@ namespace anogame.inventory
             return 1;
         }
 
-        public Sprite GetItem()
+        public InventoryItem GetItem()
         {
-            return icon.GetItemSprite();
+            return inventory.GetItemInSlot(index);
         }
 
-        public int MaxAcceptable(Sprite item)
+        public int MaxAcceptable(InventoryItem item)
         {
             if (GetItem() == null)
             {
@@ -39,12 +51,13 @@ namespace anogame.inventory
 
         public void Remove(int amount)
         {
-            icon.SetItem(null);
+            // 個数は一旦考えない
+            inventory.RemoveFromSlot(index);
         }
 
-        public void Set(Sprite item, int amount)
+        public void Set(InventoryItem item, int amount)
         {
-            icon.SetItem(item);
+            inventory.AddItemToSlot(index, item);
         }
     }
 }

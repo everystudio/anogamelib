@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+/*
 namespace anogame
 {
     [CreateAssetMenu(menuName = "Events/Save Event")]
@@ -8,3 +8,4 @@ namespace anogame
     {
     }
 }
+*/

@@ -8,17 +8,17 @@ namespace anogame.inventory
 {
     public class InventoryItemIcon : MonoBehaviour
     {
-        public void SetItem(Sprite itemSprite)
+        public void SetItem(InventoryItem inventoryItem)
         {
             var iconImage = GetComponent<Image>();
-            if (itemSprite == null)
+            if (inventoryItem == null)
             {
                 iconImage.enabled = false;
             }
             else
             {
                 iconImage.enabled = true;
-                iconImage.sprite = itemSprite;
+                iconImage.sprite = inventoryItem.GetIcon();
             }
         }
         public Sprite GetItemSprite()

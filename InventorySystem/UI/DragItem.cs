@@ -21,7 +21,7 @@ namespace anogame.inventory
             rectTransform = GetComponent<RectTransform>();
             parentCanvas = GetComponentInParent<Canvas>();
 
-            Debug.Log(parentCanvas);
+            //Debug.Log(parentCanvas);
 
             myContainer = GetComponentInParent<IDragContainer<T>>();
         }
@@ -46,15 +46,12 @@ namespace anogame.inventory
             transform.SetParent(originalParent, true);
             rectTransform.anchoredPosition = startPosition;
 
-            Debug.Log(eventData.pointerCurrentRaycast.gameObject);
-            Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
             if (eventData.pointerCurrentRaycast.gameObject != null)
             {
                 var target = eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<IDragContainer<T>>();
-
                 if (target != null && target != myContainer)
                 {
-                    Debug.Log("どっかのコンテナ");
+                    //Debug.Log("どっかのコンテナ");
                     DropItemContainer(target);
                 }
             }
@@ -74,12 +71,12 @@ namespace anogame.inventory
             // 相手側がなにもない場合はApplyするだけ
             if (target.GetItem() == null)
             {
-                Debug.Log("apply");
+                //Debug.Log("apply");
                 ApplyItemSource(target);
             }
             else
             {
-                Debug.Log("swap");
+                //Debug.Log("swap");
                 SwapItemSource(myContainer, target);
             }
         }
@@ -125,6 +122,9 @@ namespace anogame.inventory
             }
 
             // 今のところはAcceptableでの量溢れは計算に入れない
+            source.Clear();
+            target.Clear();
+
             source.Set(targetItem, targetAmount);
             target.Set(sourceItem, sourceAmount);
         }
