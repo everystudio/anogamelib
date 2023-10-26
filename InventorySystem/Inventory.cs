@@ -9,19 +9,49 @@ namespace anogame.inventory
     {
         public int capacity = 20;
 
-        InventoryItem[] inventorySlots;
+        InventorySlot[] inventorySlots;
         public event Action inventoryUpdated;
+
+        public struct InventorySlot
+        {
+            public int amount;
+            public InventoryItem inventoryItem;
+        }
 
         private void Awake()
         {
-            inventorySlots = new InventoryItem[capacity];
+            inventorySlots = new InventorySlot[capacity];
+            /*
+            for (int i = 0; i < inventorySlots.Length; i++)
+            {
+                inventorySlots[i] = new InventorySlot();
+            }
+            */
 
             // テスト用
             // InventoryItemを作成して、IDを指定して格納
-            inventorySlots[0] = InventoryItem.GetFromID("6840b2cb-f309-4162-b1b5-fa02e887c312");
-            inventorySlots[1] = InventoryItem.GetFromID("9d0a5557-4b42-4030-b491-a17ad54f4083");
+            //inventorySlots[0] = InventorySlot.GetFromID("6840b2cb-f309-4162-b1b5-fa02e887c312");
+            //inventorySlots[1] = InventorySlot.GetFromID("9d0a5557-4b42-4030-b491-a17ad54f4083");
 
 
+        }
+
+        public InventorySlot GetSlot(int index)
+        {
+            /*
+            for (int i = 0; i < inventorySlots.Length; i++)
+            {
+                Debug.Log(i.ToString() + ":" + inventorySlots[i]);
+            }
+            */
+
+            // 範囲外チェック
+            if (index < 0 || index >= inventorySlots.Length)
+            {
+                Debug.Log("Index is out of range");
+                //return null;
+            }
+            return inventorySlots[index];
         }
 
         // テスト用
@@ -45,11 +75,12 @@ namespace anogame.inventory
         {
             for (int i = 0; i < inventorySlots.Length; i++)
             {
-                if (inventorySlots[i] == null)
+                if (inventorySlots[i].inventoryItem == null)
                 {
                     return i;
                 }
             }
+            Debug.Log("Inventory is full");
             return -1;
         }
 
@@ -58,7 +89,7 @@ namespace anogame.inventory
             return inventorySlots.Length;
         }
 
-        public bool AddToFirstEmptySlot(InventoryItem item)
+        public bool AddToFirstEmptySlot(InventoryItem item, int amount)
         {
             int i = FindSlot(item);
 
@@ -67,7 +98,9 @@ namespace anogame.inventory
                 return false;
             }
 
-            inventorySlots[i] = item;
+            inventorySlots[i].inventoryItem = item;
+            inventorySlots[i].amount = amount;
+
             if (inventoryUpdated != null)
             {
                 inventoryUpdated();
@@ -78,45 +111,58 @@ namespace anogame.inventory
         {
             foreach (var slot in inventorySlots)
             {
-                if (object.ReferenceEquals(slot, item))
+                if (object.ReferenceEquals(slot.inventoryItem, item))
                 {
                     return true;
                 }
             }
             return false;
         }
-        public InventoryItem GetItemInSlot(int slot)
+        public InventoryItem GetItemInSlot(int slotIndex)
         {
             // 範囲外チェック
-            if (slot < 0 || slot >= inventorySlots.Length)
+            if (slotIndex < 0 || slotIndex >= inventorySlots.Length)
             {
                 return null;
             }
-            return inventorySlots[slot];
+            return inventorySlots[slotIndex].inventoryItem;
         }
 
-        public void RemoveFromSlot(int slot)
+        public int GetAmountInSlot(int slotIndex)
         {
             // 範囲外チェック
-            if (slot < 0 || slot >= inventorySlots.Length)
+            if (slotIndex < 0 || slotIndex >= inventorySlots.Length)
+            {
+                return -1;
+            }
+            return inventorySlots[slotIndex].amount;
+        }
+
+        public void RemoveFromSlot(int slotIndex)
+        {
+            // 範囲外チェック
+            if (slotIndex < 0 || slotIndex >= inventorySlots.Length)
             {
                 return;
             }
 
-            inventorySlots[slot] = null;
+            inventorySlots[slotIndex].inventoryItem = null;
+            inventorySlots[slotIndex].amount = 0;
             if (inventoryUpdated != null)
             {
                 inventoryUpdated();
             }
         }
-        public bool AddItemToSlot(int slotIndex, InventoryItem item)
+        public bool AddItemToSlot(int slotIndex, InventoryItem item, int amount)
         {
-            if (inventorySlots[slotIndex] != null)
+
+            if (inventorySlots[slotIndex].inventoryItem != null)
             {
-                return AddToFirstEmptySlot(item); ;
+                return AddToFirstEmptySlot(item, amount);
             }
 
-            inventorySlots[slotIndex] = item;
+            inventorySlots[slotIndex].inventoryItem = item;
+            inventorySlots[slotIndex].amount = amount;
             if (inventoryUpdated != null)
             {
                 inventoryUpdated();

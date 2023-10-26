@@ -18,11 +18,14 @@ namespace anogame.inventory
         {
             this.inventory = inventory;
             this.index = index;
-            icon.SetItem(inventory.GetItemInSlot(index));
+
+            Inventory.InventorySlot slot = inventory.GetSlot(index);
+            icon.SetItem(slot.inventoryItem, slot.amount);
         }
 
         public void Add(int amount)
         {
+            Debug.LogError("未実装 InventorySlotUI.Add()");
         }
 
         public void Clear()
@@ -32,7 +35,7 @@ namespace anogame.inventory
 
         public int GetAmount()
         {
-            return 1;
+            return inventory.GetAmountInSlot(index);
         }
 
         public InventoryItem GetItem()
@@ -57,7 +60,7 @@ namespace anogame.inventory
 
         public void Set(InventoryItem item, int amount)
         {
-            inventory.AddItemToSlot(index, item);
+            inventory.AddItemToSlot(index, item, amount);
         }
     }
 }

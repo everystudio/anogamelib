@@ -12,15 +12,16 @@ namespace anogame.inventory
         {
             return transform.position;
         }
-        public void DropItem(InventoryItem item)
+        public void DropItem(InventoryItem item, int amount)
         {
-            SpawnPickup(item, GetDropLocation());
+            SpawnPickup(item, GetDropLocation(), amount);
         }
 
-        public void SpawnPickup(InventoryItem item, Vector3 spawnLocation)
+        public PickableItem SpawnPickup(InventoryItem item, Vector3 spawnLocation, int amount)
         {
-            var pickup = item.SpawnPickableItem(spawnLocation);
+            var pickup = item.SpawnPickableItem(spawnLocation, amount);
             droppedItems.Add(pickup);
+            return pickup;
         }
 
         private void RemoveDestroyedDrops()

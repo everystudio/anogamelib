@@ -65,10 +65,10 @@ namespace anogame.inventory
             return description;
         }
 
-        public PickableItem SpawnPickableItem(Vector3 position)
+        public PickableItem SpawnPickableItem(Vector3 position, int amount)
         {
             var pickableItem = Instantiate(pickable, position, Quaternion.identity);
-            pickableItem.SetItem(this);
+            pickableItem.SetItem(this, amount);
             return pickableItem;
         }
 

@@ -30,16 +30,22 @@ namespace anogame.inventory
             return amount;
         }
 
-        public void SetItem(InventoryItem item)
+        public void SetItem(InventoryItem item, int amount)
         {
             inventoryItem = item;
+            this.amount = amount;
         }
         public void PickupItem()
         {
-            bool foundSlot = inventory.AddToFirstEmptySlot(inventoryItem);
+            bool foundSlot = inventory.AddToFirstEmptySlot(inventoryItem, amount);
             if (foundSlot)
             {
                 Destroy(gameObject);
+            }
+            else
+            {
+                Debug.Log("Inventory is full");
+
             }
         }
         public bool CanBePickedUp()
