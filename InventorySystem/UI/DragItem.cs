@@ -91,17 +91,16 @@ namespace anogame.inventory
                 return;
             }
 
-            /*
-            var maxAcceptable = myContainer.MaxAcceptable(item);
-            if (maxAcceptable <= 0)
+            var maxAcceptable = target.MaxAcceptable(item);
+            var transfer = Mathf.Min(amount, maxAcceptable);
+            if (transfer <= 0)
             {
                 Debug.Log("bbb");
                 return;
             }
-            */
 
-            myContainer.Clear();
-            target.Set(item, amount);
+            myContainer.Remove(transfer);
+            target.Set(item, transfer);
         }
 
         private void SwapItemSource(IDragContainer<T> source, IDragContainer<T> target)
@@ -129,12 +128,14 @@ namespace anogame.inventory
             target.Set(sourceItem, sourceAmount);
         }
 
-        private int CalculateTakeBack(T moveItem, int moveAmount, IDragContainer<T> source, IDragContainer<T> target)
+        private int CalculateTakeBack(
+            T moveItem, int moveAmount,
+            IDragContainer<T> sourceContainer, IDragContainer<T> targetContainer)
         {
 
             int takeBackNumber = 0;
 
-            var targetMaxAcceptable = target.MaxAcceptable(moveItem);
+            var targetMaxAcceptable = targetContainer.MaxAcceptable(moveItem);
             if (targetMaxAcceptable < moveAmount)
             {
                 takeBackNumber = moveAmount - targetMaxAcceptable;

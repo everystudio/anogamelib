@@ -20,6 +20,9 @@ namespace anogame.inventory
             this.index = index;
 
             Inventory.InventorySlot slot = inventory.GetSlot(index);
+            //Debug.Log(index);
+            //Debug.Log(slot.inventoryItem);
+            //Debug.Log(slot.amount);
             icon.SetItem(slot.inventoryItem, slot.amount);
         }
 
@@ -28,9 +31,11 @@ namespace anogame.inventory
             Debug.LogError("未実装 InventorySlotUI.Add()");
         }
 
+
         public void Clear()
         {
-            inventory.RemoveFromSlot(index);
+            var slot = inventory.GetSlot(index);
+            inventory.RemoveFromSlot(index, slot.amount);
         }
 
         public int GetAmount()
@@ -55,7 +60,7 @@ namespace anogame.inventory
         public void Remove(int amount)
         {
             // 個数は一旦考えない
-            inventory.RemoveFromSlot(index);
+            inventory.RemoveFromSlot(index, amount);
         }
 
         public void Set(InventoryItem item, int amount)

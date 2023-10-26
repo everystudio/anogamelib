@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    [CreateAssetMenu(menuName = "ScriptableObject/Inventory Item")]
-    public class InventoryItem : ScriptableObject, ISerializationCallbackReceiver
+    public abstract class InventoryItem : ScriptableObject, ISerializationCallbackReceiver
     {
         [SerializeField] private string itemID = null;
 

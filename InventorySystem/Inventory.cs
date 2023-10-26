@@ -138,16 +138,20 @@ namespace anogame.inventory
             return inventorySlots[slotIndex].amount;
         }
 
-        public void RemoveFromSlot(int slotIndex)
+        public void RemoveFromSlot(int slotIndex, int amount)
         {
             // 範囲外チェック
             if (slotIndex < 0 || slotIndex >= inventorySlots.Length)
             {
                 return;
             }
+            inventorySlots[slotIndex].amount -= amount;
+            if (inventorySlots[slotIndex].amount <= 0)
+            {
+                inventorySlots[slotIndex].inventoryItem = null;
+                inventorySlots[slotIndex].amount = 0;
+            }
 
-            inventorySlots[slotIndex].inventoryItem = null;
-            inventorySlots[slotIndex].amount = 0;
             if (inventoryUpdated != null)
             {
                 inventoryUpdated();
