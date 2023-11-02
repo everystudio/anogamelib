@@ -6,12 +6,44 @@ namespace anogame.inventory
 {
     public class ItemDropper : MonoBehaviour
     {
-        private List<PickableItem> droppedItems = new List<PickableItem>();
+        //private List<PickableItem> droppedItems = new List<PickableItem>();
+
+        [System.Serializable]
+        public class DroppableItem
+        {
+            public InventoryItem item;
+            public Vector2Int amountRange;
+            public Vector2Int dropCountRange;
+        }
+
+        [SerializeField] private DroppableItem[] dropItemArray;
+        [SerializeField] private float dropRadius = 0.5f;
 
         protected virtual Vector3 GetDropLocation()
         {
             return transform.position;
         }
+        protected virtual Vector2 GetDropLocation2D()
+        {
+            return transform.position;
+        }
+
+        public void DropItem()
+        {
+            for (int i = 0; i < dropItemArray.Length; i++)
+            {
+                int dropCount = Random.Range(dropItemArray[i].dropCountRange.x, dropItemArray[i].dropCountRange.y);
+
+                for (int dropCountIndex = 0; dropCountIndex < dropCount; dropCountIndex++)
+                {
+                    Vector2 dropPoint = GetDropLocation2D() + Random.insideUnitCircle * dropRadius;
+
+                    int dropAmount = Random.Range(dropItemArray[i].amountRange.x, dropItemArray[i].amountRange.y);
+                    SpawnPickup(dropItemArray[i].item, dropPoint, dropAmount);
+                }
+            }
+        }
+
         public void DropItem(InventoryItem item, int amount)
         {
             SpawnPickup(item, GetDropLocation(), amount);
@@ -20,10 +52,11 @@ namespace anogame.inventory
         public PickableItem SpawnPickup(InventoryItem item, Vector3 spawnLocation, int amount)
         {
             var pickup = item.SpawnPickableItem(spawnLocation, amount);
-            droppedItems.Add(pickup);
+            //droppedItems.Add(pickup);
             return pickup;
         }
 
+        /*
         private void RemoveDestroyedDrops()
         {
             var newList = new List<PickableItem>();
@@ -36,5 +69,6 @@ namespace anogame.inventory
             }
             droppedItems = newList;
         }
+        */
     }
 }
