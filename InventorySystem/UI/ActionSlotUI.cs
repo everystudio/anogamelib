@@ -20,16 +20,14 @@ namespace anogame.inventory
             UpdateIcon();
         }
 
-        /*
         public void Set(InventoryItem item, int amount)
         {
             store.AddAction(item, index, amount);
         }
-        */
-
-        public void Add(InventoryItem item, int amount)
+        public void AddAmount(int amount)
         {
-            store.AddAction(item, index, amount);
+            // 処理なし
+            Debug.Log("未実装");
         }
 
         public void Clear()
@@ -63,5 +61,7 @@ namespace anogame.inventory
         {
             icon.SetItem(GetItem(), GetAmount());
         }
+
+
     }
 }

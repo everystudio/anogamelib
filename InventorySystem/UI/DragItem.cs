@@ -66,13 +66,21 @@ namespace anogame.inventory
                 return;
             }
 
-            //Debug.Log(target);
-
             // 相手側がなにもない場合はApplyするだけ
             if (target.GetItem() == null)
             {
                 //Debug.Log("apply");
                 ApplyItemSource(target);
+            }
+            else if (myContainer.GetItem() == target.GetItem())
+            {
+                Debug.Log("同じアイテムだった");
+                //ApplyItemSource(target);
+
+                // 受け入れ容量気にしてないので注意
+                target.AddAmount(myContainer.GetAmount());
+                myContainer.Clear();
+
             }
             else
             {
@@ -100,7 +108,7 @@ namespace anogame.inventory
             }
 
             myContainer.Remove(transferAmount);
-            target.Add(item, transferAmount);
+            target.Set(item, transferAmount);
         }
 
         private void SwapItemSource(IDragContainer<T> source, IDragContainer<T> target)
@@ -114,20 +122,26 @@ namespace anogame.inventory
             source.Clear();
             target.Clear();
 
+            //Debug.Log(sourceAmount);
+            //Debug.Log(targetAmount);
+
             int sourceTakebackAmount = CalculateTakeBack(sourceItem, sourceAmount, source, target);
             int targetTakebackAmount = CalculateTakeBack(targetItem, targetAmount, target, source);
 
+            //Debug.Log(sourceTakebackAmount);
+            //Debug.Log(targetTakebackAmount);
+
             // takebackが発生する場合は元に戻す変数を用意する
-            int calcedSourceAmount = 0;
+            int calcedSourceAmount = sourceAmount;
             if (0 < sourceTakebackAmount)
             {
-                source.Add(sourceItem, sourceTakebackAmount);
+                source.Set(sourceItem, sourceTakebackAmount);
                 calcedSourceAmount = sourceAmount - sourceTakebackAmount;
             }
-            int calcedTargetAmount = 0;
+            int calcedTargetAmount = targetAmount;
             if (0 < targetTakebackAmount)
             {
-                target.Add(targetItem, targetTakebackAmount);
+                target.Set(targetItem, targetTakebackAmount);
                 calcedTargetAmount = targetAmount - targetTakebackAmount;
             }
 
@@ -136,18 +150,21 @@ namespace anogame.inventory
                 target.MaxAcceptable(sourceItem) < calcedSourceAmount)
             {
                 // どちらかのアイテムが受け入れられない場合は元に戻す
-                source.Add(sourceItem, sourceAmount);
-                target.Add(targetItem, targetAmount);
+                source.Set(sourceItem, sourceAmount);
+                target.Set(targetItem, targetAmount);
+                Debug.Log("だめだった");
                 return;
             }
+            Debug.Log(calcedTargetAmount);
+            Debug.Log(calcedSourceAmount);
 
             if (0 < calcedTargetAmount)
             {
-                source.Add(targetItem, calcedTargetAmount);
+                source.Set(targetItem, calcedTargetAmount);
             }
             if (0 < calcedSourceAmount)
             {
-                target.Add(sourceItem, calcedSourceAmount);
+                target.Set(sourceItem, calcedSourceAmount);
             }
             // これで良い気がするが、とりあえず残しておく
             //source.Add(targetItem, targetAmount);

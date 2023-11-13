@@ -4,25 +4,25 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-
-    public class InventorySlotUI : MonoBehaviour, IDragContainer<InventoryItem>
+    public class InventorySlotBase : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>
     {
-        [SerializeField] InventoryItemIcon icon = null;
+        [SerializeField] protected InventoryItemIcon icon = null;
 
-        // STATE
-        int index;
-        InventoryItem item;
-        Inventory inventory;
+        private InventoryBase inventory;
+        private int index;
 
-        public void Setup(Inventory inventory, int index)
+        private void Awake()
+        {
+            inventory.inventoryUpdated += UpdateIcon;
+            UpdateIcon();
+        }
+
+        public void Setup(InventoryBase inventory, int index)
         {
             this.inventory = inventory;
             this.index = index;
 
-            Inventory.InventorySlot slot = inventory.GetSlot(index);
-            //Debug.Log(index);
-            //Debug.Log(slot.inventoryItem);
-            //Debug.Log(slot.amount);
+            var slot = inventory.GetSlot(index);
             icon.SetItem(slot.inventoryItem, slot.amount);
         }
 
@@ -35,6 +35,7 @@ namespace anogame.inventory
         {
             inventory.AddAmountToSlot(index, amount);
         }
+
 
         public void Clear()
         {
@@ -66,11 +67,10 @@ namespace anogame.inventory
             // 個数は一旦考えない
             inventory.RemoveFromSlot(index, amount);
         }
-        /*
-        public void Set(InventoryItem item, int amount)
+
+        private void UpdateIcon()
         {
-            inventory.AddItemToSlot(index, item, amount);
+            icon.SetItem(GetItem(), GetAmount());
         }
-        */
     }
 }

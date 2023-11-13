@@ -34,9 +34,14 @@ namespace anogame.inventory
             return 1;
         }
 
-        public void Add(InventoryItem item, int number)
+        public void Set(InventoryItem item, int number)
         {
             playerEquipment.AddItem(equipLocation, (EquipableItem)item);
+        }
+        public void AddAmount(int amount)
+        {
+            // 処理なし
+            Debug.Log("利用することは無いはず");
         }
 
         public InventoryItem GetItem()
@@ -82,5 +87,7 @@ namespace anogame.inventory
             //inventory.RemoveFromSlot(index);
             playerEquipment.RemoveItem(equipLocation);
         }
+
+
     }
 }

@@ -13,11 +13,19 @@ namespace anogame.inventory
         // これテスト用
         private Inventory inventory;
 
+        private SpriteRenderer modelSpriteRenderer;
+
         // ここテスト用
         private void Awake()
         {
-            var player = GameObject.FindGameObjectWithTag("Player");
-            inventory = player.GetComponent<Inventory>();
+            if (inventory == null)
+            {
+                var player = GameObject.FindGameObjectWithTag("Player");
+                inventory = player.GetComponent<Inventory>();
+            }
+
+            modelSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         }
 
         public InventoryItem GetItem()
@@ -34,10 +42,14 @@ namespace anogame.inventory
         {
             inventoryItem = item;
             this.amount = amount;
+            if (modelSpriteRenderer != null)
+            {
+                modelSpriteRenderer.sprite = inventoryItem.GetIcon();
+            }
         }
         public void PickupItem()
         {
-            bool foundSlot = inventory.AddToFirstEmptySlot(inventoryItem, amount);
+            bool foundSlot = inventory.AddItemToSlot(inventoryItem, amount);
             if (foundSlot)
             {
                 Destroy(gameObject);
