@@ -7,7 +7,7 @@ namespace anogame.inventory
     public class InventoryUI : MonoBehaviour
     {
         // CONFIG DATA
-        [SerializeField] InventorySlotUI InventoryItemPrefab = null;
+        [SerializeField] InventorySlot InventoryItemPrefab = null;
         [SerializeField] private Transform inventorySlotRoot = null;
 
         // CACHE
@@ -16,7 +16,7 @@ namespace anogame.inventory
         private void Awake()
         {
             playerInventory = Inventory.GetPlayerInventory();
-            playerInventory.inventoryUpdated += Redraw;
+            playerInventory.inventoryUpdated.AddListener(Redraw);
         }
 
         private void Start()

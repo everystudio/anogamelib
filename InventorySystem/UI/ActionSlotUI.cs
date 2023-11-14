@@ -4,64 +4,31 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    public class ActionSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>
+    public class ActionSlotUI : InventorySlotBase<InventoryItem>
     {
-        [SerializeField] InventoryItemIcon icon = null;
-        [SerializeField] int index = 0;
+        [SerializeField] private GameObject selectingFrame;
 
-        // テスト用
-        ActionStore store;
-
-
-        private void Awake()
+        public void Select(bool flag)
         {
-            store = GameObject.FindGameObjectWithTag("Player").GetComponent<ActionStore>();
-            store.storeUpdated += UpdateIcon;
-            UpdateIcon();
+            selectingFrame.SetActive(flag);
         }
 
-        public void Set(InventoryItem item, int amount)
+        /*
+        public override void Set(InventoryItem item, int amount)
         {
-            store.AddAction(item, index, amount);
+            inventory.AddItemToSlot(index, item, amount);
         }
-        public void AddAmount(int amount)
+        public override void AddAmount(int amount)
         {
             // 処理なし
             Debug.Log("未実装");
         }
 
-        public void Clear()
+        public override void Clear()
         {
             Remove(GetAmount());
         }
-
-        public int GetAmount()
-        {
-            return store.GetAmount(index);
-        }
-
-        public InventoryItem GetItem()
-        {
-            return store.GetAction(index);
-        }
-
-        public int MaxAcceptable(InventoryItem item)
-        {
-            return store.MaxAcceptable(item, index);
-        }
-
-        public void Remove(int amount)
-        {
-            store.RemoveItems(index, amount);
-        }
-
-        // PRIVATE
-
-        void UpdateIcon()
-        {
-            icon.SetItem(GetItem(), GetAmount());
-        }
-
+        */
 
     }
 }

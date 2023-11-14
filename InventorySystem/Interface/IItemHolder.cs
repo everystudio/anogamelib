@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    public interface IItemHolder
+    public interface IItemHolder<T> where T : InventoryItem
     {
-        InventoryItem GetItem();
+        T GetItem();
     }
 }

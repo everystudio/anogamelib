@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace anogame.inventory
 {
-    public class DragItem<T> : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler where T : class
+    public class DragItem<T> : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler where T : InventoryItem
     {
         // PRIVATE STATE
         private Vector2 startPosition;
@@ -49,9 +49,16 @@ namespace anogame.inventory
             if (eventData.pointerCurrentRaycast.gameObject != null)
             {
                 var target = eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<IDragContainer<T>>();
+
+                var temp = eventData.pointerCurrentRaycast.gameObject.GetComponent<IDragContainer<ActionItem>>();
+                Debug.Log(temp);
+                // Tのタイプをログに表示する
+                Debug.Log(typeof(T));
+                Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
+                Debug.Log(target);
                 if (target != null && target != myContainer)
                 {
-                    //Debug.Log("どっかのコンテナ");
+                    Debug.Log("どっかのコンテナ");
                     DropItemContainer(target);
                 }
             }

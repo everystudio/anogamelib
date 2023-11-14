@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    public class EquipmentSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>
+    public class EquipmentSlotUI : MonoBehaviour, IItemHolder<InventoryItem>, IDragContainer<InventoryItem>
     {
         [SerializeField] InventoryItemIcon icon = null;
         [SerializeField] EquipLocation equipLocation = EquipLocation.Weapon;

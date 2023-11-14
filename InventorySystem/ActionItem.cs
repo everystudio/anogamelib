@@ -8,9 +8,17 @@ namespace anogame.inventory
     public class ActionItem : InventoryItem
     {
         [SerializeField] bool consumable = false;
+        [SerializeField] private string animationTriggerName = "swing";
         public virtual void Use(GameObject user)
         {
-            Debug.Log("Using action: " + this);
+            if (user.TryGetComponent<Animator>(out var animator))
+            {
+                animator.SetTrigger(animationTriggerName);
+            }
+            else
+            {
+                Debug.Log("No animator found");
+            }
         }
 
         public bool isConsumable()

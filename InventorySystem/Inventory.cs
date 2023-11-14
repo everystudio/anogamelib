@@ -5,14 +5,15 @@ using System;
 
 namespace anogame.inventory
 {
-    public class Inventory : MonoBehaviour
+    public class Inventory : InventoryBase<InventoryItem>
     {
+        /*
         public int capacity = 20;
 
-        InventorySlot[] inventorySlots;
+        InventorySlotData[] inventorySlotDatas;
         public event Action inventoryUpdated;
 
-        public struct InventorySlot
+        public struct InventorySlotData
         {
             public int amount;
             public InventoryItem inventoryItem;
@@ -20,38 +21,18 @@ namespace anogame.inventory
 
         private void Awake()
         {
-            inventorySlots = new InventorySlot[capacity];
-            /*
-            for (int i = 0; i < inventorySlots.Length; i++)
-            {
-                inventorySlots[i] = new InventorySlot();
-            }
-            */
-
-            // テスト用
-            // InventoryItemを作成して、IDを指定して格納
-            //inventorySlots[0] = InventorySlot.GetFromID("6840b2cb-f309-4162-b1b5-fa02e887c312");
-            //inventorySlots[1] = InventorySlot.GetFromID("9d0a5557-4b42-4030-b491-a17ad54f4083");
-
-
+            inventorySlotDatas = new InventorySlotData[capacity];
         }
 
-        public InventorySlot GetSlot(int index)
+        public InventorySlotData GetSlot(int index)
         {
-            /*
-            for (int i = 0; i < inventorySlots.Length; i++)
-            {
-                Debug.Log(i.ToString() + ":" + inventorySlots[i]);
-            }
-            */
-
             // 範囲外チェック
-            if (index < 0 || index >= inventorySlots.Length)
+            if (index < 0 || index >= inventorySlotDatas.Length)
             {
                 Debug.Log("Index is out of range");
                 //return null;
             }
-            return inventorySlots[index];
+            return inventorySlotDatas[index];
         }
 
         // テスト用
@@ -73,9 +54,9 @@ namespace anogame.inventory
 
         private int FindEmptySlot()
         {
-            for (int i = 0; i < inventorySlots.Length; i++)
+            for (int i = 0; i < inventorySlotDatas.Length; i++)
             {
-                if (inventorySlots[i].inventoryItem == null)
+                if (inventorySlotDatas[i].inventoryItem == null)
                 {
                     return i;
                 }
@@ -86,7 +67,7 @@ namespace anogame.inventory
 
         public int GetSize()
         {
-            return inventorySlots.Length;
+            return inventorySlotDatas.Length;
         }
 
         public bool AddToFirstEmptySlot(InventoryItem item, int amount)
@@ -98,8 +79,8 @@ namespace anogame.inventory
                 return false;
             }
 
-            inventorySlots[i].inventoryItem = item;
-            inventorySlots[i].amount = amount;
+            inventorySlotDatas[i].inventoryItem = item;
+            inventorySlotDatas[i].amount = amount;
 
             if (inventoryUpdated != null)
             {
@@ -109,7 +90,7 @@ namespace anogame.inventory
         }
         public bool HasItem(InventoryItem item)
         {
-            foreach (var slot in inventorySlots)
+            foreach (var slot in inventorySlotDatas)
             {
                 if (object.ReferenceEquals(slot.inventoryItem, item))
                 {
@@ -121,35 +102,35 @@ namespace anogame.inventory
         public InventoryItem GetItemInSlot(int slotIndex)
         {
             // 範囲外チェック
-            if (slotIndex < 0 || slotIndex >= inventorySlots.Length)
+            if (slotIndex < 0 || slotIndex >= inventorySlotDatas.Length)
             {
                 return null;
             }
-            return inventorySlots[slotIndex].inventoryItem;
+            return inventorySlotDatas[slotIndex].inventoryItem;
         }
 
         public int GetAmountInSlot(int slotIndex)
         {
             // 範囲外チェック
-            if (slotIndex < 0 || slotIndex >= inventorySlots.Length)
+            if (slotIndex < 0 || slotIndex >= inventorySlotDatas.Length)
             {
                 return -1;
             }
-            return inventorySlots[slotIndex].amount;
+            return inventorySlotDatas[slotIndex].amount;
         }
 
         public void RemoveFromSlot(int slotIndex, int amount)
         {
             // 範囲外チェック
-            if (slotIndex < 0 || slotIndex >= inventorySlots.Length)
+            if (slotIndex < 0 || slotIndex >= inventorySlotDatas.Length)
             {
                 return;
             }
-            inventorySlots[slotIndex].amount -= amount;
-            if (inventorySlots[slotIndex].amount <= 0)
+            inventorySlotDatas[slotIndex].amount -= amount;
+            if (inventorySlotDatas[slotIndex].amount <= 0)
             {
-                inventorySlots[slotIndex].inventoryItem = null;
-                inventorySlots[slotIndex].amount = 0;
+                inventorySlotDatas[slotIndex].inventoryItem = null;
+                inventorySlotDatas[slotIndex].amount = 0;
             }
 
             if (inventoryUpdated != null)
@@ -161,15 +142,15 @@ namespace anogame.inventory
         public void AddAmountToSlot(int slotIndex, int amount)
         {
             // 範囲外チェック
-            if (slotIndex < 0 || slotIndex >= inventorySlots.Length)
+            if (slotIndex < 0 || slotIndex >= inventorySlotDatas.Length)
             {
                 return;
             }
-            inventorySlots[slotIndex].amount += amount;
-            if (inventorySlots[slotIndex].amount <= 0)
+            inventorySlotDatas[slotIndex].amount += amount;
+            if (inventorySlotDatas[slotIndex].amount <= 0)
             {
-                inventorySlots[slotIndex].inventoryItem = null;
-                inventorySlots[slotIndex].amount = 0;
+                inventorySlotDatas[slotIndex].inventoryItem = null;
+                inventorySlotDatas[slotIndex].amount = 0;
             }
 
             if (inventoryUpdated != null)
@@ -182,13 +163,13 @@ namespace anogame.inventory
 
         public bool AddItemToSlot(int slotIndex, InventoryItem item, int amount)
         {
-            if (inventorySlots[slotIndex].inventoryItem != null)
+            if (inventorySlotDatas[slotIndex].inventoryItem != null)
             {
                 return AddToFirstEmptySlot(item, amount);
             }
 
-            inventorySlots[slotIndex].inventoryItem = item;
-            inventorySlots[slotIndex].amount += amount;
+            inventorySlotDatas[slotIndex].inventoryItem = item;
+            inventorySlotDatas[slotIndex].amount += amount;
             if (inventoryUpdated != null)
             {
                 inventoryUpdated();
@@ -200,20 +181,20 @@ namespace anogame.inventory
         {
             // 同じInventoryItemのスロットを集める
 
-            for (int i = 0; i < inventorySlots.Length; i++)
+            for (int i = 0; i < inventorySlotDatas.Length; i++)
             {
-                if (inventorySlots[i].inventoryItem == item)
+                if (inventorySlotDatas[i].inventoryItem == item)
                 {
-                    int capacity = 99 - inventorySlots[i].amount;
+                    int capacity = 99 - inventorySlotDatas[i].amount;
                     if (amount <= capacity)
                     {
-                        inventorySlots[i].amount += amount;
+                        inventorySlotDatas[i].amount += amount;
                         inventoryUpdated();
                         return true;
                     }
                     else
                     {
-                        inventorySlots[i].amount = 99;
+                        inventorySlotDatas[i].amount = 99;
                         amount -= capacity;
                     }
                 }
@@ -224,7 +205,7 @@ namespace anogame.inventory
             }
             return false;
         }
-
+*/
 
     }
 

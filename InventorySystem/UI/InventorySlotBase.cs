@@ -4,56 +4,65 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    public class InventorySlotBase : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>
+    public class InventorySlotBase<T> : MonoBehaviour, IItemHolder<T>, IDragContainer<T> where T : InventoryItem
     {
         [SerializeField] protected InventoryItemIcon icon = null;
 
-        private InventoryBase inventory;
-        private int index;
+        protected InventoryBase<T> inventory;
+        protected int index;
 
+        /*
         private void Awake()
         {
-            inventory.inventoryUpdated += UpdateIcon;
-            UpdateIcon();
+            if (inventory != null)
+            {
+                inventory.inventoryUpdated.AddListener(UpdateIcon);
+                UpdateIcon();
+            }
         }
+        */
 
-        public void Setup(InventoryBase inventory, int index)
+        public void Setup(InventoryBase<T> inventory, int index)
         {
             this.inventory = inventory;
             this.index = index;
 
             var slot = inventory.GetSlot(index);
             icon.SetItem(slot.inventoryItem, slot.amount);
+
+            inventory.inventoryUpdated.AddListener(UpdateIcon);
+            UpdateIcon();
+
         }
 
-        public void Set(InventoryItem item, int amount)
+        public virtual void Set(T item, int amount)
         {
             inventory.AddItemToSlot(index, item, amount);
         }
 
-        public void AddAmount(int amount)
+        public virtual void AddAmount(int amount)
         {
             inventory.AddAmountToSlot(index, amount);
         }
 
 
-        public void Clear()
+        public virtual void Clear()
         {
             var slot = inventory.GetSlot(index);
             inventory.RemoveFromSlot(index, slot.amount);
         }
 
-        public int GetAmount()
+        public virtual int GetAmount()
         {
             return inventory.GetAmountInSlot(index);
         }
 
-        public InventoryItem GetItem()
+        public virtual T GetItem()
         {
             return inventory.GetItemInSlot(index);
         }
 
-        public int MaxAcceptable(InventoryItem item)
+        public virtual int MaxAcceptable(T item)
         {
             if (GetItem() == null)
             {
@@ -62,13 +71,13 @@ namespace anogame.inventory
             return 0;
         }
 
-        public void Remove(int amount)
+        public virtual void Remove(int amount)
         {
             // 個数は一旦考えない
             inventory.RemoveFromSlot(index, amount);
         }
 
-        private void UpdateIcon()
+        protected virtual void UpdateIcon()
         {
             icon.SetItem(GetItem(), GetAmount());
         }

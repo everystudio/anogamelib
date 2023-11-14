@@ -5,8 +5,9 @@ using UnityEngine;
 namespace anogame.inventory
 {
 
-    public class InventorySlotUI : MonoBehaviour, IDragContainer<InventoryItem>
+    public class InventorySlot : InventorySlotBase<InventoryItem>
     {
+        /*
         [SerializeField] InventoryItemIcon icon = null;
 
         // STATE
@@ -19,7 +20,7 @@ namespace anogame.inventory
             this.inventory = inventory;
             this.index = index;
 
-            Inventory.InventorySlot slot = inventory.GetSlot(index);
+            Inventory.InventorySlotData slot = inventory.GetSlot(index);
             //Debug.Log(index);
             //Debug.Log(slot.inventoryItem);
             //Debug.Log(slot.amount);
