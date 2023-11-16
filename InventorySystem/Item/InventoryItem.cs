@@ -86,7 +86,7 @@ namespace anogame.inventory
 
         protected virtual void select(GameObject owner)
         {
-            selectingDisplay = Instantiate(pickable, owner.transform.position + new Vector3(0, 1, 0), Quaternion.identity, owner.transform);
+            selectingDisplay = Instantiate(pickable, owner.transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity, owner.transform);
             selectingDisplay.SetItem(this, 1);
         }
 

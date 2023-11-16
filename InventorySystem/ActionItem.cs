@@ -5,11 +5,11 @@ using UnityEngine;
 namespace anogame.inventory
 {
     [CreateAssetMenu(menuName = "ScriptableObject/Inventory Action Item")]
-    public class ActionItem : InventoryItem
+    public class ActionItem : InventoryItem, IItemAction
     {
         [SerializeField] bool consumable = false;
         [SerializeField] private string animationTriggerName = "swing";
-        public virtual void Use(GameObject user)
+        public void Use(GameObject user)
         {
             if (user.TryGetComponent<Animator>(out var animator))
             {
@@ -21,7 +21,7 @@ namespace anogame.inventory
             }
         }
 
-        public bool isConsumable()
+        public bool IsConsumable()
         {
             return consumable;
         }

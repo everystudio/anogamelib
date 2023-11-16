@@ -72,14 +72,17 @@ namespace anogame.inventory
 
         public int MaxAcceptable(InventoryItem item, int index)
         {
-            var actionItem = item as ActionItem;
-            if (!actionItem) return 0;
+            var actionItem = item as IItemAction;
+            if (actionItem == null)
+            {
+                return 0;
+            }
 
             if (!object.ReferenceEquals(item, inventorySlotDatas[index].inventoryItem))
             {
                 return 0;
             }
-            if (actionItem.isConsumable())
+            if (actionItem.IsConsumable())
             {
                 return int.MaxValue;
             }

@@ -207,14 +207,14 @@ namespace anogame.inventory
         public bool Use(int index, GameObject user)
         {
             //Debug.LogError("使う時確認必要");
-            var actionItem = inventorySlotDatas[index].inventoryItem as ActionItem;
-            if (actionItem == null)
+            IItemAction itemAction = inventorySlotDatas[index].inventoryItem as IItemAction;
+            if (itemAction == null)
             {
                 return false;
             }
 
-            actionItem.Use(user);
-            if (actionItem.isConsumable())
+            itemAction.Use(user);
+            if (itemAction.IsConsumable())
             {
                 RemoveFromSlot(index, 1);
             }
