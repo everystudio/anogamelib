@@ -40,6 +40,7 @@ namespace anogame.inventory
             {
                 slots[i].Select(i == selecting);
             }
+            targetInventory.Select(selecting, targetInventory.gameObject);
         }
 
         private void Update()

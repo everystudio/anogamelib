@@ -6,7 +6,7 @@ using System;
 
 namespace anogame.inventory
 {
-    public class InventoryBase<T> : MonoBehaviour where T : InventoryItem
+    public abstract class InventoryBase<T> : MonoBehaviour where T : InventoryItem
     {
         public int capacity = 20;
 
@@ -219,6 +219,24 @@ namespace anogame.inventory
                 RemoveFromSlot(index, 1);
             }
             return true;
+        }
+
+        public void Select(int index, GameObject user)
+        {
+            for (int i = 0; i < inventorySlotDatas.Length; i++)
+            {
+                if (inventorySlotDatas[i].inventoryItem != null)
+                {
+                    if (i == index)
+                    {
+                        inventorySlotDatas[i].inventoryItem.Select(user);
+                    }
+                    else
+                    {
+                        inventorySlotDatas[i].inventoryItem.Deselect(user);
+                    }
+                }
+            }
         }
 
     }

@@ -14,6 +14,9 @@ namespace anogame.inventory
         [SerializeField] private PickableItem pickable = null;
         [SerializeField] private bool stackable = false;
 
+        private bool isSelecting = false;
+        private PickableItem selectingDisplay = null;
+
         static Dictionary<string, InventoryItem> itemLookupCache;
 
         public static InventoryItem GetFromID(string itemID)
@@ -62,6 +65,37 @@ namespace anogame.inventory
         public string GetDescription()
         {
             return description;
+        }
+
+        public void Select(GameObject owner)
+        {
+            if (!isSelecting)
+            {
+                isSelecting = true;
+                select(owner);
+            }
+        }
+        public void Deselect(GameObject owner)
+        {
+            if (isSelecting)
+            {
+                isSelecting = false;
+                deselect(owner);
+            }
+        }
+
+        protected virtual void select(GameObject owner)
+        {
+            selectingDisplay = Instantiate(pickable, owner.transform.position + new Vector3(0, 1, 0), Quaternion.identity, owner.transform);
+            selectingDisplay.SetItem(this, 1);
+        }
+
+        protected virtual void deselect(GameObject owner)
+        {
+            if (selectingDisplay != null)
+            {
+                Destroy(selectingDisplay.gameObject);
+            }
         }
 
         public PickableItem SpawnPickableItem(Vector3 position, int amount)
