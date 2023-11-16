@@ -221,21 +221,29 @@ namespace anogame.inventory
             return true;
         }
 
-        public void Select(int index, GameObject user)
+        public InventoryItem Select(int index, GameObject user)
         {
             for (int i = 0; i < inventorySlotDatas.Length; i++)
             {
                 if (inventorySlotDatas[i].inventoryItem != null)
                 {
-                    if (i == index)
-                    {
-                        inventorySlotDatas[i].inventoryItem.Select(user);
-                    }
-                    else
+                    if (i != index)
                     {
                         inventorySlotDatas[i].inventoryItem.Deselect(user);
                     }
                 }
+            }
+            if (0 <= index && index < inventorySlotDatas.Length)
+            {
+                if (inventorySlotDatas[index].inventoryItem != null)
+                {
+                    inventorySlotDatas[index].inventoryItem.Select(user);
+                }
+                return inventorySlotDatas[index].inventoryItem;
+            }
+            else
+            {
+                return null;
             }
         }
 

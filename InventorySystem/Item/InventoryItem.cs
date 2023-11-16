@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace anogame.inventory
 {
@@ -18,6 +19,10 @@ namespace anogame.inventory
         private PickableItem selectingDisplay = null;
 
         static Dictionary<string, InventoryItem> itemLookupCache;
+
+        // これはいずれ修正すると思う
+        public static UnityEvent<InventoryItem> OnAnyItemSelect = new UnityEvent<InventoryItem>();
+        public static UnityEvent<InventoryItem> OnAnyItemDeselect = new UnityEvent<InventoryItem>();
 
         public static InventoryItem GetFromID(string itemID)
         {
@@ -73,6 +78,7 @@ namespace anogame.inventory
             {
                 isSelecting = true;
                 select(owner);
+                OnAnyItemSelect.Invoke(this);
             }
         }
         public void Deselect(GameObject owner)
@@ -81,12 +87,14 @@ namespace anogame.inventory
             {
                 isSelecting = false;
                 deselect(owner);
+
+                OnAnyItemDeselect.Invoke(this);
             }
         }
 
         protected virtual void select(GameObject owner)
         {
-            selectingDisplay = Instantiate(pickable, owner.transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity, owner.transform);
+            selectingDisplay = Instantiate(pickable, owner.transform.position + new Vector3(0, 1f, 0), Quaternion.identity, owner.transform);
             selectingDisplay.SetItem(this, 1);
         }
 

@@ -4,8 +4,9 @@ using UnityEngine;
 using anogame.inventory;
 
 [CreateAssetMenu(menuName = "ScriptableObject/Inventory Tool Item")]
-public class ToolItem : InventoryItem, IItemAction
+public class ToolItem : InventoryItem, IItemAction, IItemType
 {
+    [SerializeField] private ITEM_TYPE itemType = ITEM_TYPE.NONE;
     [SerializeField] private string animationTriggerName = "swing";
 
     protected override void select(GameObject owner)
@@ -35,5 +36,10 @@ public class ToolItem : InventoryItem, IItemAction
     public bool IsConsumable()
     {
         return false;
+    }
+
+    public ITEM_TYPE GetItemType()
+    {
+        return itemType;
     }
 }

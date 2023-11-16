@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace anogame.inventory
 {
@@ -10,6 +11,8 @@ namespace anogame.inventory
         [SerializeField] private int displaySize = 8;
 
         public ActionSlotUI[] slots;
+
+        public static UnityEvent<InventoryItem> OnSelectItem = new UnityEvent<InventoryItem>();
 
         protected override void Redraw()
         {
@@ -40,7 +43,8 @@ namespace anogame.inventory
             {
                 slots[i].Select(i == selecting);
             }
-            targetInventory.Select(selecting, targetInventory.gameObject);
+            var inventoryItem = targetInventory.Select(selecting, targetInventory.gameObject);
+            OnSelectItem.Invoke(inventoryItem);
         }
 
         private void Update()
@@ -61,6 +65,7 @@ namespace anogame.inventory
                 ShowSelectingFrame(selectingIndex);
                 //Debug.Log(selectingIndex);
             }
+            /*
 
             if (0 <= selectingIndex)
             {
@@ -71,7 +76,19 @@ namespace anogame.inventory
                 }
 
             }
+            */
+        }
 
+        public bool Use()
+        {
+            if (0 <= selectingIndex)
+            {
+                return targetInventory.Use(selectingIndex, targetInventory.gameObject);
+            }
+            else
+            {
+                return false;
+            }
 
         }
     }
