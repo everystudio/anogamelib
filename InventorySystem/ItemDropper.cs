@@ -18,14 +18,20 @@ namespace anogame.inventory
 
         [SerializeField] private DroppableItem[] dropItemArray;
         [SerializeField] private float dropRadius = 0.5f;
+        private Vector2 offset = new Vector2(0f, 0f);
 
         protected virtual Vector3 GetDropLocation()
         {
-            return transform.position;
+            return transform.position + (Vector3)offset;
         }
         protected virtual Vector2 GetDropLocation2D()
         {
-            return transform.position;
+            return transform.position + (Vector3)offset;
+        }
+
+        public void SetOffset(Vector2 offset)
+        {
+            this.offset = offset;
         }
 
         public void DropItem()
