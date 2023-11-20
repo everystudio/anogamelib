@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    public interface IDragContainer<T> : IDragTarget<T>, IDragSource<T> where T : class
+    public interface IDragContainer<T> : IDragTarget<T>, IDragSource<T> where T : InventoryItem
     {
 
     }

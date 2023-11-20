@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using System;
 #pragma warning disable CS0649
 #pragma warning disable CS0414
-
+/*
 public class SystemSave : SystemCore
 {
     [SerializeField]
@@ -88,3 +88,4 @@ public class SystemSave : SystemCore
 
 
 }
+*/

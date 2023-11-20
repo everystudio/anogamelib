@@ -1,22 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System;
 
 namespace anogame.inventory
 {
-    public class Inventory : InventoryBase<InventoryItem>
+    public abstract class InventoryBase<T> : MonoBehaviour where T : InventoryItem
     {
-        /*
         public int capacity = 20;
 
-        InventorySlotData[] inventorySlotDatas;
-        public event Action inventoryUpdated;
+        protected InventorySlotData[] inventorySlotDatas;
+        public UnityEvent inventoryUpdated;
 
         public struct InventorySlotData
         {
             public int amount;
-            public InventoryItem inventoryItem;
+            public T inventoryItem;
         }
 
         private void Awake()
@@ -42,12 +42,12 @@ namespace anogame.inventory
             return player.GetComponent<Inventory>();
         }
 
-        public bool HasSpaceFor(InventoryItem item)
+        public bool HasSpaceFor(T item)
         {
             return FindSlot(item) >= 0;
         }
 
-        private int FindSlot(InventoryItem item)
+        private int FindSlot(T item)
         {
             return FindEmptySlot();
         }
@@ -70,7 +70,7 @@ namespace anogame.inventory
             return inventorySlotDatas.Length;
         }
 
-        public bool AddToFirstEmptySlot(InventoryItem item, int amount)
+        public bool AddToFirstEmptySlot(T item, int amount)
         {
             int i = FindSlot(item);
 
@@ -84,11 +84,11 @@ namespace anogame.inventory
 
             if (inventoryUpdated != null)
             {
-                inventoryUpdated();
+                inventoryUpdated.Invoke();
             }
             return true;
         }
-        public bool HasItem(InventoryItem item)
+        public bool HasItem(T item)
         {
             foreach (var slot in inventorySlotDatas)
             {
@@ -99,7 +99,7 @@ namespace anogame.inventory
             }
             return false;
         }
-        public InventoryItem GetItemInSlot(int slotIndex)
+        public T GetItemInSlot(int slotIndex)
         {
             // 範囲外チェック
             if (slotIndex < 0 || slotIndex >= inventorySlotDatas.Length)
@@ -135,7 +135,7 @@ namespace anogame.inventory
 
             if (inventoryUpdated != null)
             {
-                inventoryUpdated();
+                inventoryUpdated.Invoke();
             }
         }
 
@@ -155,13 +155,11 @@ namespace anogame.inventory
 
             if (inventoryUpdated != null)
             {
-                inventoryUpdated();
+                inventoryUpdated.Invoke();
             }
         }
 
-
-
-        public bool AddItemToSlot(int slotIndex, InventoryItem item, int amount)
+        public bool AddItemToSlot(int slotIndex, T item, int amount)
         {
             if (inventorySlotDatas[slotIndex].inventoryItem != null)
             {
@@ -172,12 +170,12 @@ namespace anogame.inventory
             inventorySlotDatas[slotIndex].amount += amount;
             if (inventoryUpdated != null)
             {
-                inventoryUpdated();
+                inventoryUpdated.Invoke();
             }
             return true;
         }
 
-        public bool AddItemToSlot(InventoryItem item, int amount)
+        public bool AddItemToSlot(T item, int amount)
         {
             // 同じInventoryItemのスロットを集める
 
@@ -189,7 +187,7 @@ namespace anogame.inventory
                     if (amount <= capacity)
                     {
                         inventorySlotDatas[i].amount += amount;
-                        inventoryUpdated();
+                        inventoryUpdated.Invoke();
                         return true;
                     }
                     else
@@ -205,7 +203,49 @@ namespace anogame.inventory
             }
             return false;
         }
-*/
+
+        public bool Use(int index, GameObject user)
+        {
+            //Debug.LogError("使う時確認必要");
+            IItemAction itemAction = inventorySlotDatas[index].inventoryItem as IItemAction;
+            if (itemAction == null)
+            {
+                return false;
+            }
+
+            itemAction.Use(user);
+            if (itemAction.IsConsumable())
+            {
+                RemoveFromSlot(index, 1);
+            }
+            return true;
+        }
+
+        public InventoryItem Select(int index, GameObject user)
+        {
+            for (int i = 0; i < inventorySlotDatas.Length; i++)
+            {
+                if (inventorySlotDatas[i].inventoryItem != null)
+                {
+                    if (i != index)
+                    {
+                        inventorySlotDatas[i].inventoryItem.Deselect(user);
+                    }
+                }
+            }
+            if (0 <= index && index < inventorySlotDatas.Length)
+            {
+                if (inventorySlotDatas[index].inventoryItem != null)
+                {
+                    inventorySlotDatas[index].inventoryItem.Select(user);
+                }
+                return inventorySlotDatas[index].inventoryItem;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
     }
 

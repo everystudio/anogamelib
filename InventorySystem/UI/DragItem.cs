@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace anogame.inventory
 {
-    public class DragItem<T> : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler where T : class
+    public class DragItem<T> : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler where T : InventoryItem
     {
         // PRIVATE STATE
         private Vector2 startPosition;
@@ -21,7 +21,7 @@ namespace anogame.inventory
             rectTransform = GetComponent<RectTransform>();
             parentCanvas = GetComponentInParent<Canvas>();
 
-            Debug.Log(parentCanvas);
+            //Debug.Log(parentCanvas);
 
             myContainer = GetComponentInParent<IDragContainer<T>>();
         }
@@ -46,12 +46,16 @@ namespace anogame.inventory
             transform.SetParent(originalParent, true);
             rectTransform.anchoredPosition = startPosition;
 
-            Debug.Log(eventData.pointerCurrentRaycast.gameObject);
-            Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
             if (eventData.pointerCurrentRaycast.gameObject != null)
             {
                 var target = eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<IDragContainer<T>>();
 
+                var temp = eventData.pointerCurrentRaycast.gameObject.GetComponent<IDragContainer<ActionItem>>();
+                Debug.Log(temp);
+                // Tのタイプをログに表示する
+                Debug.Log(typeof(T));
+                Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
+                Debug.Log(target);
                 if (target != null && target != myContainer)
                 {
                     Debug.Log("どっかのコンテナ");
@@ -69,17 +73,25 @@ namespace anogame.inventory
                 return;
             }
 
-            //Debug.Log(target);
-
             // 相手側がなにもない場合はApplyするだけ
             if (target.GetItem() == null)
             {
-                Debug.Log("apply");
+                //Debug.Log("apply");
                 ApplyItemSource(target);
+            }
+            else if (myContainer.GetItem() == target.GetItem())
+            {
+                Debug.Log("同じアイテムだった");
+                //ApplyItemSource(target);
+
+                // 受け入れ容量気にしてないので注意
+                target.AddAmount(myContainer.GetAmount());
+                myContainer.Clear();
+
             }
             else
             {
-                Debug.Log("swap");
+                //Debug.Log("swap");
                 SwapItemSource(myContainer, target);
             }
         }
@@ -90,21 +102,20 @@ namespace anogame.inventory
             var amount = myContainer.GetAmount();
             if (item == null || amount <= 0)
             {
-                Debug.Log("aaa");
+                //Debug.Log("aaa");
                 return;
             }
 
-            /*
-            var maxAcceptable = myContainer.MaxAcceptable(item);
-            if (maxAcceptable <= 0)
+            var maxAcceptable = target.MaxAcceptable(item);
+            var transferAmount = Mathf.Min(amount, maxAcceptable);
+            if (transferAmount <= 0)
             {
-                Debug.Log("bbb");
+                //Debug.Log("bbb");
                 return;
             }
-            */
 
-            myContainer.Clear();
-            target.Set(item, amount);
+            myContainer.Remove(transferAmount);
+            target.Set(item, transferAmount);
         }
 
         private void SwapItemSource(IDragContainer<T> source, IDragContainer<T> target)
@@ -114,30 +125,78 @@ namespace anogame.inventory
             var targetItem = target.GetItem();
             var targetAmount = target.GetAmount();
 
-            if (sourceItem == null || sourceAmount <= 0)
+            // 一旦中身を空にする
+            source.Clear();
+            target.Clear();
+
+            //Debug.Log(sourceAmount);
+            //Debug.Log(targetAmount);
+
+            int sourceTakebackAmount = CalculateTakeBack(sourceItem, sourceAmount, source, target);
+            int targetTakebackAmount = CalculateTakeBack(targetItem, targetAmount, target, source);
+
+            //Debug.Log(sourceTakebackAmount);
+            //Debug.Log(targetTakebackAmount);
+
+            // takebackが発生する場合は元に戻す変数を用意する
+            int calcedSourceAmount = sourceAmount;
+            if (0 < sourceTakebackAmount)
             {
-                return;
+                source.Set(sourceItem, sourceTakebackAmount);
+                calcedSourceAmount = sourceAmount - sourceTakebackAmount;
+            }
+            int calcedTargetAmount = targetAmount;
+            if (0 < targetTakebackAmount)
+            {
+                target.Set(targetItem, targetTakebackAmount);
+                calcedTargetAmount = targetAmount - targetTakebackAmount;
             }
 
-            if (targetItem == null || targetAmount <= 0)
+            // ダメだった場合
+            if (source.MaxAcceptable(targetItem) < calcedTargetAmount ||
+                target.MaxAcceptable(sourceItem) < calcedSourceAmount)
             {
+                // どちらかのアイテムが受け入れられない場合は元に戻す
+                source.Set(sourceItem, sourceAmount);
+                target.Set(targetItem, targetAmount);
+                Debug.Log("だめだった");
                 return;
             }
+            Debug.Log(calcedTargetAmount);
+            Debug.Log(calcedSourceAmount);
 
-            // 今のところはAcceptableでの量溢れは計算に入れない
-            source.Set(targetItem, targetAmount);
-            target.Set(sourceItem, sourceAmount);
+            if (0 < calcedTargetAmount)
+            {
+                source.Set(targetItem, calcedTargetAmount);
+            }
+            if (0 < calcedSourceAmount)
+            {
+                target.Set(sourceItem, calcedSourceAmount);
+            }
+            // これで良い気がするが、とりあえず残しておく
+            //source.Add(targetItem, targetAmount);
+            //target.Add(sourceItem, sourceAmount);
         }
 
-        private int CalculateTakeBack(T moveItem, int moveAmount, IDragContainer<T> source, IDragContainer<T> target)
+        private int CalculateTakeBack(
+            T moveItem, int moveAmount,
+            IDragContainer<T> sourceContainer, IDragContainer<T> targetContainer)
         {
 
             int takeBackNumber = 0;
+            var targetMaxAcceptable = targetContainer.MaxAcceptable(moveItem);
 
-            var targetMaxAcceptable = target.MaxAcceptable(moveItem);
             if (targetMaxAcceptable < moveAmount)
             {
                 takeBackNumber = moveAmount - targetMaxAcceptable;
+
+                // ここ良くない。テークバックの数字だけを計算すれるはずなのに、受け入れ先のことまで木にしている
+                var sourceMaxAcceptable = sourceContainer.MaxAcceptable(moveItem);
+                if (sourceMaxAcceptable < takeBackNumber)
+                {
+                    // takebackの数を受け入れられるかどうかは別のチェックメソッドを用意するべき
+                    return 0;
+                }
             }
             return takeBackNumber;
 

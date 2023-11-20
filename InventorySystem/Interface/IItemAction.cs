@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    public class InventoryDragItem : DragItem<InventoryItem>
+    public interface IItemAction
     {
-
+        void Use(GameObject owner);
+        bool IsConsumable();
     }
-
 }

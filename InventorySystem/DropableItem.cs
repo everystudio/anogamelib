@@ -4,9 +4,7 @@ using UnityEngine;
 
 namespace anogame.inventory
 {
-    public class InventoryDragItem : DragItem<InventoryItem>
+    public class DropableItem : MonoBehaviour
     {
-
     }
-
 }
