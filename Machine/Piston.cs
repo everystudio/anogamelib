@@ -13,6 +13,8 @@ namespace anogame
         [SerializeField] private bool isMoveOnAwake = false;
         [SerializeField] private bool isReverse = false;
 
+        [SerializeField] private bool isGlobal = false;
+
         private Rigidbody rb;
         private Vector3 startPosition;
         private float time;
@@ -52,6 +54,13 @@ namespace anogame
             // 移動させる場合、物理的な挙動を考慮する必要がある
             // そのため、Rigidbodyを使って移動させる
             Vector3 useDirection = isReverse ? -direction : direction;
+
+            if (!isGlobal)
+            {
+                // ローカル座標系で移動を行う
+                useDirection = transform.TransformDirection(useDirection);
+            }
+
             rb.MovePosition(startPosition + useDirection * Mathf.Sin(time) * swing);
         }
     }
