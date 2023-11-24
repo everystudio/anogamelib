@@ -51,14 +51,14 @@ namespace anogame.inventory
                 var target = eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<IDragContainer<T>>();
 
                 var temp = eventData.pointerCurrentRaycast.gameObject.GetComponent<IDragContainer<ActionItem>>();
-                Debug.Log(temp);
+                //Debug.Log(temp);
                 // Tのタイプをログに表示する
-                Debug.Log(typeof(T));
-                Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
-                Debug.Log(target);
+                //Debug.Log(typeof(T));
+                //Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
+                //Debug.Log(target);
                 if (target != null && target != myContainer)
                 {
-                    Debug.Log("どっかのコンテナ");
+                    //Debug.Log("異なるコンテナ");
                     DropItemContainer(target);
                 }
             }
