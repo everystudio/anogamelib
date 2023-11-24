@@ -162,8 +162,8 @@ namespace anogame.inventory
                 Debug.Log("だめだった");
                 return;
             }
-            Debug.Log(calcedTargetAmount);
-            Debug.Log(calcedSourceAmount);
+            //Debug.Log(calcedTargetAmount);
+            //Debug.Log(calcedSourceAmount);
 
             if (0 < calcedTargetAmount)
             {
