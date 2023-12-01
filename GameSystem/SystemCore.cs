@@ -20,7 +20,7 @@ public abstract class SystemCore : MonoBehaviour
 
     private bool isInitialized;
     private bool pausedUpdate;
-    protected void Pauze(bool state)
+    protected void Pause(bool state)
     {
         pausedUpdate = state;
     }
@@ -37,16 +37,17 @@ public abstract class SystemCore : MonoBehaviour
     public void Tick(float deltaTime)
     {
         if (pausedUpdate)
+        {
             return;
+        }
 
+        currentUpdateTime += deltaTime;
         if (systemSettings.updateInterval == 0 || systemSettings.updateInterval <= currentUpdateTime)
         {
-            OnTick();
+            // ここの処理は誤差を考慮する必要が出たら改善する
+            float time = systemSettings.updateInterval == 0 ? deltaTime : systemSettings.updateInterval;
+            OnTick(time);
             currentUpdateTime = 0;
-        }
-        else
-        {
-            currentUpdateTime += deltaTime;
         }
     }
 
@@ -57,7 +58,8 @@ public abstract class SystemCore : MonoBehaviour
 
         if (systemSettings.fixedUpdateInterval == 0 || systemSettings.fixedUpdateInterval <= currentFixedUpdateTime)
         {
-            OnFixedTick();
+            float time = systemSettings.fixedUpdateInterval == 0 ? fixedDeltaTime : systemSettings.fixedUpdateInterval;
+            OnFixedTick(time);
             currentFixedUpdateTime = 0;
         }
         else
@@ -66,6 +68,6 @@ public abstract class SystemCore : MonoBehaviour
         }
     }
     public abstract void OnLoadSystem();
-    public virtual void OnTick() { }
-    public virtual void OnFixedTick() { }
+    public virtual void OnTick(float deltaTime) { }
+    public virtual void OnFixedTick(float deltaTime) { }
 }
