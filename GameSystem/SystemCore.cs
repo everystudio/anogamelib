@@ -2,72 +2,75 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SystemCore : MonoBehaviour
+namespace anogame
 {
-    [System.Serializable]
-    public class Settings
+    public abstract class SystemCore : MonoBehaviour
     {
-        public bool hasUpdate;
-        public bool hasFixedUpdate;
-
-        public float updateInterval;
-        public float fixedUpdateInterval = 0;
-    }
-    public Settings systemSettings;
-
-    private float currentUpdateTime;
-    private float currentFixedUpdateTime;
-
-    private bool isInitialized;
-    private bool pausedUpdate;
-    protected void Pause(bool state)
-    {
-        pausedUpdate = state;
-    }
-
-    public void Initialize(SystemTicker ticker)
-    {
-        if (!isInitialized)
+        [System.Serializable]
+        public class Settings
         {
-            OnLoadSystem();
-            isInitialized = true;
+            public bool hasUpdate;
+            public bool hasFixedUpdate;
+
+            public float updateInterval;
+            public float fixedUpdateInterval = 0;
         }
-    }
+        public Settings systemSettings;
 
-    public void Tick(float deltaTime)
-    {
-        if (pausedUpdate)
+        private float currentUpdateTime;
+        private float currentFixedUpdateTime;
+
+        private bool isInitialized;
+        private bool pausedUpdate;
+        protected void Pause(bool state)
         {
-            return;
+            pausedUpdate = state;
         }
 
-        currentUpdateTime += deltaTime;
-        if (systemSettings.updateInterval == 0 || systemSettings.updateInterval <= currentUpdateTime)
+        public void Initialize(SystemTicker ticker)
         {
-            // ここの処理は誤差を考慮する必要が出たら改善する
-            float time = systemSettings.updateInterval == 0 ? deltaTime : systemSettings.updateInterval;
-            OnTick(time);
-            currentUpdateTime = 0;
+            if (!isInitialized)
+            {
+                OnLoadSystem();
+                isInitialized = true;
+            }
         }
-    }
 
-    public void FixedTick(float fixedDeltaTime)
-    {
-        if (pausedUpdate)
-            return;
+        public void Tick(float deltaTime)
+        {
+            if (pausedUpdate)
+            {
+                return;
+            }
 
-        if (systemSettings.fixedUpdateInterval == 0 || systemSettings.fixedUpdateInterval <= currentFixedUpdateTime)
-        {
-            float time = systemSettings.fixedUpdateInterval == 0 ? fixedDeltaTime : systemSettings.fixedUpdateInterval;
-            OnFixedTick(time);
-            currentFixedUpdateTime = 0;
+            currentUpdateTime += deltaTime;
+            if (systemSettings.updateInterval == 0 || systemSettings.updateInterval <= currentUpdateTime)
+            {
+                // ここの処理は誤差を考慮する必要が出たら改善する
+                float time = systemSettings.updateInterval == 0 ? deltaTime : systemSettings.updateInterval;
+                OnTick(time);
+                currentUpdateTime = 0;
+            }
         }
-        else
+
+        public void FixedTick(float fixedDeltaTime)
         {
-            currentFixedUpdateTime += fixedDeltaTime;
+            if (pausedUpdate)
+                return;
+
+            if (systemSettings.fixedUpdateInterval == 0 || systemSettings.fixedUpdateInterval <= currentFixedUpdateTime)
+            {
+                float time = systemSettings.fixedUpdateInterval == 0 ? fixedDeltaTime : systemSettings.fixedUpdateInterval;
+                OnFixedTick(time);
+                currentFixedUpdateTime = 0;
+            }
+            else
+            {
+                currentFixedUpdateTime += fixedDeltaTime;
+            }
         }
+        public abstract void OnLoadSystem();
+        public virtual void OnTick(float deltaTime) { }
+        public virtual void OnFixedTick(float deltaTime) { }
     }
-    public abstract void OnLoadSystem();
-    public virtual void OnTick(float deltaTime) { }
-    public virtual void OnFixedTick(float deltaTime) { }
 }

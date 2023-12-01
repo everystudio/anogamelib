@@ -2,49 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SystemTicker : MonoBehaviour
+namespace anogame
 {
-    private List<SystemCore> systems = new List<SystemCore>();
 
-    private List<SystemCore> updateSystems = new List<SystemCore>();
-    private List<SystemCore> fixedUpdateSystems = new List<SystemCore>();
-
-    private void Awake()
+    public class SystemTicker : MonoBehaviour
     {
-        Debug.Log("SystemTicker Awake");
-        GetComponentsInChildren<SystemCore>(systems);
+        private List<SystemCore> systems = new List<SystemCore>();
 
-        foreach (SystemCore system in systems)
+        private List<SystemCore> updateSystems = new List<SystemCore>();
+        private List<SystemCore> fixedUpdateSystems = new List<SystemCore>();
+
+        private void Awake()
         {
-            Debug.Log(system.GetType().Name);
-            system.Initialize(this);
+            Debug.Log("SystemTicker Awake");
+            GetComponentsInChildren<SystemCore>(systems);
 
-            if (system.systemSettings.hasFixedUpdate)
+            foreach (SystemCore system in systems)
             {
-                fixedUpdateSystems.Add(system);
-            }
+                Debug.Log(system.GetType().Name);
+                system.Initialize(this);
 
-            if (system.systemSettings.hasUpdate)
-            {
-                updateSystems.Add(system);
+                if (system.systemSettings.hasFixedUpdate)
+                {
+                    fixedUpdateSystems.Add(system);
+                }
+
+                if (system.systemSettings.hasUpdate)
+                {
+                    updateSystems.Add(system);
+                }
             }
         }
-    }
-    private void Update()
-    {
-        float deltaTime = Time.deltaTime;
-        for (int i = 0; i < updateSystems.Count; i++)
+        private void Update()
         {
-            updateSystems[i].Tick(deltaTime);
+            float deltaTime = Time.deltaTime;
+            for (int i = 0; i < updateSystems.Count; i++)
+            {
+                updateSystems[i].Tick(deltaTime);
+            }
         }
-    }
 
-    private void FixedUpdate()
-    {
-        float fixedDeltaTime = Time.fixedDeltaTime;
-        for (int i = 0; i < fixedUpdateSystems.Count; i++)
+        private void FixedUpdate()
         {
-            fixedUpdateSystems[i].FixedTick(fixedDeltaTime);
+            float fixedDeltaTime = Time.fixedDeltaTime;
+            for (int i = 0; i < fixedUpdateSystems.Count; i++)
+            {
+                fixedUpdateSystems[i].FixedTick(fixedDeltaTime);
+            }
         }
     }
 }
