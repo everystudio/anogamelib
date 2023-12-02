@@ -22,7 +22,7 @@ namespace anogame
 
         private bool isInitialized;
         private bool pausedUpdate;
-        protected void Pause(bool state)
+        public void Pause(bool state)
         {
             pausedUpdate = state;
         }
