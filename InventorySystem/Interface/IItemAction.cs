@@ -6,7 +6,7 @@ namespace anogame.inventory
 {
     public interface IItemAction
     {
-        void Use(GameObject owner);
+        bool Use(GameObject owner);
         bool IsConsumable();
     }
 }

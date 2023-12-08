@@ -213,12 +213,12 @@ namespace anogame.inventory
                 return false;
             }
 
-            itemAction.Use(user);
-            if (itemAction.IsConsumable())
+            bool itemUse = itemAction.Use(user);
+            if (itemUse && itemAction.IsConsumable())
             {
                 RemoveFromSlot(index, 1);
             }
-            return true;
+            return itemUse;
         }
 
         public InventoryItem Select(int index, GameObject user)
