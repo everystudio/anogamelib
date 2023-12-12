@@ -92,6 +92,7 @@ namespace anogame.inventory
             }
         }
 
+        // 頭の上に表示している処理。これがデフォルトで良いのかは疑問
         protected virtual void select(GameObject owner)
         {
             selectingDisplay = Instantiate(pickable, owner.transform.position + new Vector3(0, 1f, 0), Quaternion.identity, owner.transform);

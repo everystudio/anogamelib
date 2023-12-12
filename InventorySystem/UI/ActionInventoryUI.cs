@@ -13,6 +13,7 @@ namespace anogame.inventory
         public ActionSlotUI[] slots;
 
         public static UnityEvent<InventoryItem> OnSelectItem = new UnityEvent<InventoryItem>();
+        private InventoryItem lastSelectItem = null;
 
         protected override void Redraw()
         {
@@ -44,6 +45,11 @@ namespace anogame.inventory
                 slots[i].Select(i == selecting);
             }
             var inventoryItem = targetInventory.Select(selecting, targetInventory.gameObject);
+            if (lastSelectItem != inventoryItem)
+            {
+                lastSelectItem?.Deselect(targetInventory.gameObject);
+                lastSelectItem = inventoryItem;
+            }
             OnSelectItem.Invoke(inventoryItem);
         }
 
