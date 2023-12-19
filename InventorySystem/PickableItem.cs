@@ -18,11 +18,14 @@ namespace anogame.inventory
         // ここテスト用
         private void Awake()
         {
+            /*
             if (inventory == null)
             {
                 var player = GameObject.FindGameObjectWithTag("Player");
+                Debug.Log(player);
                 inventory = player.GetComponent<Inventory>();
             }
+            */
 
             modelSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
@@ -49,6 +52,8 @@ namespace anogame.inventory
         }
         public void PickupItem()
         {
+            Debug.LogError("ここ修正ポイント");
+            /*
             bool foundSlot = inventory.AddItemToSlot(inventoryItem, amount);
             if (foundSlot)
             {
@@ -59,6 +64,7 @@ namespace anogame.inventory
                 Debug.Log("Inventory is full");
 
             }
+            */
         }
         public bool CanBePickedUp()
         {
