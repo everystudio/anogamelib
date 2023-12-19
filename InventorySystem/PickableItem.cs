@@ -15,9 +15,25 @@ namespace anogame.inventory
 
         private SpriteRenderer modelSpriteRenderer;
 
+        [SerializeField] private ScriptableReference player;
+
         // ここテスト用
         private void Awake()
         {
+            if (player == null)
+            {
+                Debug.LogError("playerがnullです");
+            }
+            else if (player.Reference != null)
+            {
+                inventory = player.Reference.GetComponent<Inventory>();
+            }
+
+            player.AddListener((GameObject player) =>
+            {
+                inventory = player.GetComponent<Inventory>();
+            });
+
             /*
             if (inventory == null)
             {
@@ -52,8 +68,11 @@ namespace anogame.inventory
         }
         public void PickupItem()
         {
-            Debug.LogError("ここ修正ポイント");
-            /*
+            if (inventory == null)
+            {
+                Debug.LogError("ここ修正ポイント");
+                return;
+            }
             bool foundSlot = inventory.AddItemToSlot(inventoryItem, amount);
             if (foundSlot)
             {
@@ -64,7 +83,6 @@ namespace anogame.inventory
                 Debug.Log("Inventory is full");
 
             }
-            */
         }
         public bool CanBePickedUp()
         {
