@@ -5,7 +5,7 @@ using UnityEngine;
 namespace anogame.inventory
 {
 
-    public class PickableItem : MonoBehaviour
+    public class PickableItem : MonoBehaviour, IInteractable
     {
         private InventoryItem inventoryItem;
         private int amount = 1;
@@ -33,18 +33,7 @@ namespace anogame.inventory
             {
                 inventory = player.GetComponent<Inventory>();
             });
-
-            /*
-            if (inventory == null)
-            {
-                var player = GameObject.FindGameObjectWithTag("Player");
-                Debug.Log(player);
-                inventory = player.GetComponent<Inventory>();
-            }
-            */
-
             modelSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
-
         }
 
         public InventoryItem GetItem()
@@ -73,6 +62,11 @@ namespace anogame.inventory
                 Debug.LogError("ここ修正ポイント");
                 return;
             }
+            PickupItem(inventory);
+        }
+
+        public void PickupItem(Inventory inventory)
+        {
             bool foundSlot = inventory.AddItemToSlot(inventoryItem, amount);
             if (foundSlot)
             {
@@ -81,12 +75,28 @@ namespace anogame.inventory
             else
             {
                 Debug.Log("Inventory is full");
-
             }
         }
         public bool CanBePickedUp()
         {
+            return CanBePickedUp(inventory);
+        }
+        public bool CanBePickedUp(Inventory inventory)
+        {
             return inventory.HasSpaceFor(inventoryItem);
+        }
+
+        public void Interact(GameObject owner)
+        {
+            var ownerInventory = owner.GetComponent<Inventory>();
+            if (ownerInventory == null)
+            {
+                return;
+            }
+            if (CanBePickedUp(ownerInventory))
+            {
+                PickupItem(ownerInventory);
+            }
         }
     }
 }
