@@ -85,10 +85,13 @@ namespace anogame.inventory
             */
         }
 
-        public bool Use()
+        public bool Use(out InventoryItem useItem)
         {
+            useItem = null;
             if (0 <= selectingIndex)
             {
+                //useItem = targetInventory.Select(selectingIndex, targetInventory.gameObject);
+                useItem = targetInventory.GetItemInSlot(selectingIndex);
                 return targetInventory.Use(selectingIndex, targetInventory.gameObject);
             }
             else

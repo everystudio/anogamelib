@@ -26,7 +26,8 @@ namespace anogame.inventory
         private void SpawnPickup()
         {
             pickup = item.SpawnPickableItem(transform.position, amount);
-            pickup.transform.SetParent(transform);
+            //Debug.Log(pickup.GetInstanceID());
+            pickup.transform.SetParent(null);
         }
         private void DestroyPickup()
         {
