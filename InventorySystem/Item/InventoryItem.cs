@@ -32,10 +32,10 @@ namespace anogame.inventory
                 var itemList = Resources.LoadAll<InventoryItem>("");
                 foreach (var item in itemList)
                 {
-                    Debug.Log(item.displayName);
+                    //Debug.Log(item.displayName);
                     if (itemLookupCache.ContainsKey(item.itemID))
                     {
-                        Debug.LogError(string.Format("Looks like there's a duplicate GameDevTV.UI.InventorySystem ID for objects: {0} and {1}", itemLookupCache[item.itemID], item));
+                        Debug.LogError(string.Format("Duplicateしてない? IDが被るのでCreateから作成してください objects: {0} and {1}", itemLookupCache[item.itemID], item));
                         continue;
                     }
 

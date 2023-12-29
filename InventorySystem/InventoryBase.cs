@@ -10,14 +10,32 @@ namespace anogame.inventory
     {
         public int capacity = 20;
 
+        protected string inventorySerialID = "";
+
         protected InventorySlotData[] inventorySlotDatas;
         public UnityEvent inventoryUpdated;
 
+        [System.Serializable]
         public struct InventorySlotData
         {
             public int amount;
             public T inventoryItem;
         }
+
+
+        [System.Serializable]
+        public struct SaveDataInventorySlot
+        {
+            public string itemID;
+            public int amount;
+        }
+        [System.Serializable]
+        public struct SaveDataInventory
+        {
+            public int capacity;
+            public SaveDataInventorySlot[] inventorySlotDatas;
+        }
+
 
         private void Awake()
         {
