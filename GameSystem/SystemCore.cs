@@ -22,9 +22,11 @@ namespace anogame
 
         private bool isInitialized;
         private bool pausedUpdate;
+        protected virtual void pause(bool state) { }
         public void Pause(bool state)
         {
             pausedUpdate = state;
+            pause(state);
         }
 
         public void Initialize(SystemTicker ticker)
