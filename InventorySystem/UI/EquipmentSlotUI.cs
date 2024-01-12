@@ -34,7 +34,7 @@ namespace anogame.inventory
             return 1;
         }
 
-        public void Set(InventoryItem item, int number)
+        public void SetInventoryItem(InventoryItem item, int number)
         {
             playerEquipment.AddItem(equipLocation, (EquipableItem)item);
         }
@@ -88,6 +88,14 @@ namespace anogame.inventory
             playerEquipment.RemoveItem(equipLocation);
         }
 
+        public bool Settable(InventoryItem item)
+        {
+            return true;
+        }
 
+        public bool AcceptableInventoryItem(InventoryItem item)
+        {
+            return true;
+        }
     }
 }

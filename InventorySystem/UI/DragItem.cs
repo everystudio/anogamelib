@@ -66,6 +66,19 @@ namespace anogame.inventory
 
         private void DropItemContainer(IDragContainer<T> target)
         {
+            if (target.AcceptableInventoryItem(myContainer.GetItem()) == false)
+            {
+                //Debug.Log("相手側にアイテムを渡せない");
+                return;
+            }
+            else if (target.GetItem() != null && myContainer.AcceptableInventoryItem(target.GetItem()) == false)
+            {
+                //Debug.Log("入れ替え対象のアイテムを、自身のインベントリに入れられない");
+                return;
+            }
+
+
+
             // 同じ場合は返る
             if (object.ReferenceEquals(target, myContainer))
             {
@@ -115,7 +128,7 @@ namespace anogame.inventory
             }
 
             myContainer.Remove(transferAmount);
-            target.Set(item, transferAmount);
+            target.SetInventoryItem(item, transferAmount);
         }
 
         private void SwapItemSource(IDragContainer<T> source, IDragContainer<T> target)
@@ -142,13 +155,13 @@ namespace anogame.inventory
             int calcedSourceAmount = sourceAmount;
             if (0 < sourceTakebackAmount)
             {
-                source.Set(sourceItem, sourceTakebackAmount);
+                source.SetInventoryItem(sourceItem, sourceTakebackAmount);
                 calcedSourceAmount = sourceAmount - sourceTakebackAmount;
             }
             int calcedTargetAmount = targetAmount;
             if (0 < targetTakebackAmount)
             {
-                target.Set(targetItem, targetTakebackAmount);
+                target.SetInventoryItem(targetItem, targetTakebackAmount);
                 calcedTargetAmount = targetAmount - targetTakebackAmount;
             }
 
@@ -157,8 +170,8 @@ namespace anogame.inventory
                 target.MaxAcceptable(sourceItem) < calcedSourceAmount)
             {
                 // どちらかのアイテムが受け入れられない場合は元に戻す
-                source.Set(sourceItem, sourceAmount);
-                target.Set(targetItem, targetAmount);
+                source.SetInventoryItem(sourceItem, sourceAmount);
+                target.SetInventoryItem(targetItem, targetAmount);
                 Debug.Log("だめだった");
                 return;
             }
@@ -167,11 +180,11 @@ namespace anogame.inventory
 
             if (0 < calcedTargetAmount)
             {
-                source.Set(targetItem, calcedTargetAmount);
+                source.SetInventoryItem(targetItem, calcedTargetAmount);
             }
             if (0 < calcedSourceAmount)
             {
-                target.Set(sourceItem, calcedSourceAmount);
+                target.SetInventoryItem(sourceItem, calcedSourceAmount);
             }
             // これで良い気がするが、とりあえず残しておく
             //source.Add(targetItem, targetAmount);

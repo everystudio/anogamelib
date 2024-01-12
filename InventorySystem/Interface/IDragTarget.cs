@@ -7,7 +7,8 @@ namespace anogame.inventory
     public interface IDragTarget<T> where T : class
     {
         int MaxAcceptable(T item);
-        void Set(T item, int amount);
+        void SetInventoryItem(T item, int amount);
         void AddAmount(int amount);
+        bool AcceptableInventoryItem(T item);
     }
 }

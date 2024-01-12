@@ -159,6 +159,7 @@ namespace anogame.inventory
 
         public void AddAmountToSlot(int slotIndex, int amount)
         {
+            Debug.Log("AddAmountToSlot:" + slotIndex + " amount:" + amount);
             // 範囲外チェック
             if (slotIndex < 0 || slotIndex >= inventorySlotDatas.Length)
             {
@@ -177,8 +178,15 @@ namespace anogame.inventory
             }
         }
 
+        // 対象のアイテムをそもそもこのインベントリは受け入れていいのか？
+        public virtual bool AccpeptableItem(T item)
+        {
+            return true;
+        }
+
         public bool AddItemToSlot(int slotIndex, T item, int amount)
         {
+            //Debug.Log("AddItemToSlot:" + slotIndex + " amount:" + amount);
             if (inventorySlotDatas[slotIndex].inventoryItem != null)
             {
                 return AddToFirstEmptySlot(item, amount);

@@ -9,6 +9,7 @@ namespace anogame.inventory
         [SerializeField] protected InventoryItemIcon icon = null;
 
         protected InventoryBase<T> inventory;
+        public InventoryBase<T> Inventory { get { return inventory; } }
         protected int index;
 
         /*
@@ -34,8 +35,15 @@ namespace anogame.inventory
             UpdateIcon();
 
         }
-
-        public virtual void Set(T item, int amount)
+        public virtual bool AcceptableInventoryItem(T item)
+        {
+            if (inventory.AccpeptableItem(item) == false)
+            {
+                return false;
+            }
+            return true;
+        }
+        public virtual void SetInventoryItem(T item, int amount)
         {
             inventory.AddItemToSlot(index, item, amount);
         }
@@ -44,7 +52,6 @@ namespace anogame.inventory
         {
             inventory.AddAmountToSlot(index, amount);
         }
-
 
         public virtual void Clear()
         {
@@ -81,5 +88,7 @@ namespace anogame.inventory
         {
             icon.SetItem(GetItem(), GetAmount());
         }
+
+
     }
 }
