@@ -7,8 +7,23 @@ namespace anogame.inventory
 
     public class PickableItem : MonoBehaviour, IInteractable
     {
-        private InventoryItem inventoryItem;
+        private InventoryItem inventoryItem
+        {
+            get
+            {
+                if (coreInventoryItem == null)
+                {
+                    coreInventoryItem = InventoryItem.GetFromID(itemID);
+                }
+                return coreInventoryItem;
+            }
+        }
+        private InventoryItem coreInventoryItem;
+
+        private string itemID = "";
         private int amount = 1;
+
+
 
         // これテスト用
         private Inventory inventory;
@@ -48,7 +63,8 @@ namespace anogame.inventory
 
         public void SetItem(InventoryItem item, int amount)
         {
-            inventoryItem = item;
+            coreInventoryItem = item;
+            this.itemID = item.GetItemID();
             this.amount = amount;
             if (modelSpriteRenderer != null)
             {
