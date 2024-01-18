@@ -50,7 +50,7 @@ namespace anogame.inventory
             {
                 var target = eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<IDragContainer<T>>();
 
-                var temp = eventData.pointerCurrentRaycast.gameObject.GetComponent<IDragContainer<ActionItem>>();
+                //var temp = eventData.pointerCurrentRaycast.gameObject.GetComponent<IDragContainer<ActionItem>>();
                 //Debug.Log(temp);
                 // Tのタイプをログに表示する
                 //Debug.Log(typeof(T));
