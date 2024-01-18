@@ -12,11 +12,11 @@ namespace anogame.inventory
         [SerializeField] private string displayName = null;
         [SerializeField][TextArea] private string description = null;
         [SerializeField] private Sprite icon = null;
-        [SerializeField] private PickableItem pickable = null;
+        [SerializeField] private PickableItemBase pickable = null;
         [SerializeField] private bool stackable = false;
 
         private bool isSelecting = false;
-        private PickableItem selectingDisplay = null;
+        private PickableItemBase selectingDisplay = null;
 
         static Dictionary<string, InventoryItem> itemLookupCache;
 
@@ -107,7 +107,7 @@ namespace anogame.inventory
             }
         }
 
-        public PickableItem SpawnPickableItem(Vector3 position, int amount)
+        public PickableItemBase SpawnPickableItem(Vector3 position, int amount)
         {
             var pickableItem = Instantiate(pickable, position, Quaternion.identity);
             pickableItem.SetItem(this, amount);

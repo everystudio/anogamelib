@@ -9,15 +9,15 @@ namespace anogame.inventory
         [SerializeField] InventoryItem item = null;
         [SerializeField] int amount = 1;
 
-        private PickableItem pickup = null;
+        private PickableItemBase pickup = null;
         private void Awake()
         {
             // Spawn in Awake so can be destroyed by save system after.
             SpawnPickup();
         }
-        public PickableItem GetPickup()
+        public PickableItemBase GetPickup()
         {
-            return GetComponentInChildren<PickableItem>();
+            return GetComponentInChildren<PickableItemBase>();
         }
         public bool isCollected()
         {
