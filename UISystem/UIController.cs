@@ -59,6 +59,7 @@ namespace anogame
             ret.localScale = UnityEngine.Vector3.one;
 
             ret.transform.localPosition = UnityEngine.Vector3.zero;
+            ret.transform.localRotation = UnityEngine.Quaternion.identity;
 
             return ret;
         }
