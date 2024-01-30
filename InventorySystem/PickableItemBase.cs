@@ -18,6 +18,13 @@ namespace anogame.inventory
             }
         }
         private InventoryItem coreInventoryItem;
+        public InventoryItem Item
+        {
+            get
+            {
+                return inventoryItem;
+            }
+        }
 
         private string itemID = "";
         private int amount = 1;
