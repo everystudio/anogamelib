@@ -9,8 +9,8 @@ namespace anogame
     {
         protected StateBase<T> stateCurrent;
 
-        public UnityEvent OnBegin = new UnityEvent();
-        public UnityEvent OnEnd = new UnityEvent();
+        [HideInInspector] public UnityEvent OnBegin = new UnityEvent();
+        [HideInInspector] public UnityEvent OnEnd = new UnityEvent();
 
         public virtual void OnUpdatePrev() { }
         public virtual void OnUpdateAfter() { }
