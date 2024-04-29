@@ -13,6 +13,7 @@ namespace anogame.inventory
         protected string inventorySerialID = "";
 
         protected InventorySlotData[] inventorySlotDatas;
+        public UnityEvent OnOpenInventory = new UnityEvent();
         public UnityEvent inventoryUpdated;
 
         [System.Serializable]
