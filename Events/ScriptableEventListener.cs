@@ -15,7 +15,7 @@ namespace anogame
         public void Dispatch(T parameter)
         {
             //Debug.Log(gameObject.name);
-            Action.Invoke(parameter);
+            Action?.Invoke(parameter);
         }
 
         public void OnEnable()
