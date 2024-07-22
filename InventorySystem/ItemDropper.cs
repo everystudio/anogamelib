@@ -57,6 +57,7 @@ namespace anogame.inventory
 
         public PickableItemBase SpawnPickup(InventoryItem item, Vector3 spawnLocation, int amount)
         {
+            Debug.Log(item.GetDisplayName() + "をドロップしました");
             var pickup = item.SpawnPickableItem(spawnLocation, amount);
             //droppedItems.Add(pickup);
             return pickup;

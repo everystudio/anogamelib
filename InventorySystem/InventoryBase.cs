@@ -118,6 +118,52 @@ namespace anogame.inventory
             }
             return false;
         }
+        public int GetAmount(T item)
+        {
+            int amount = 0;
+            foreach (var slot in inventorySlotDatas)
+            {
+                if (object.ReferenceEquals(slot.inventoryItem, item))
+                {
+                    amount += slot.amount;
+                }
+            }
+            return amount;
+        }
+        public bool RemoveItem(T item, int amount)
+        {
+            // 個数が十分かの確認をする
+            if (GetAmount(item) < amount)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < inventorySlotDatas.Length; i++)
+            {
+                if (object.ReferenceEquals(inventorySlotDatas[i].inventoryItem, item))
+                {
+                    if (inventorySlotDatas[i].amount <= amount)
+                    {
+                        inventorySlotDatas[i].inventoryItem = null;
+                        amount -= inventorySlotDatas[i].amount;
+
+                        RemoveFromSlot(i, inventorySlotDatas[i].amount);
+                    }
+                    else
+                    {
+                        inventorySlotDatas[i].amount -= amount;
+                        amount = 0;
+                        break;
+                    }
+                }
+            }
+
+            if (inventoryUpdated != null)
+            {
+                inventoryUpdated.Invoke();
+            }
+            return true;
+        }
         public T GetItemInSlot(int slotIndex)
         {
             // 範囲外チェック
