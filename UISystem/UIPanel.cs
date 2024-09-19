@@ -40,6 +40,7 @@ namespace anogame
                 await Task.Yield();
             }
             canvasGroup.alpha = 1;
+            canvasGroup.blocksRaycasts = true;
 
         }
 
@@ -73,6 +74,7 @@ namespace anogame
             }
 
             canvasGroup.alpha = 0;
+            canvasGroup.blocksRaycasts = false;
         }
 
 
